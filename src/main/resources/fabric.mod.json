@@ -1,0 +1,30 @@
+{
+    "schemaVersion": 1,
+    "id": "trilife",
+    "version": "${version}",
+    "name": "trilife",
+    "description": "",
+    "authors": [],
+    "contact": {
+        "repo": ""
+    },
+    "license": "MIT",
+    "icon": "assets/trilife/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "client": [
+            "de.catstorm.trilife.client.TrilifeClient"
+        ],
+        "main": [
+            "de.catstorm.trilife.Trilife"
+        ]
+    },
+    "mixins": [
+        "trilife.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}"
+    }
+}
