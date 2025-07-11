@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:wind_charge"
+        },
+        {
+            "item": "minecraft:wind_charge"
+        },
+        {
+            "item": "trilife:empty_totem"
+        },
+        {
+            "item": "minecraft:wind_charge"
+        },
+        {
+            "item": "minecraft:wind_charge"
+        }
+    ],
+    "result": {
+        "id": "trilife:windburst_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}

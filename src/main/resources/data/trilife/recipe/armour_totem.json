@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#T#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:experience_bottle"
+        },
+        "T": {
+            "item": "trilife:empty_totem"
+        }
+    },
+    "result": {
+        "id": "trilife:armour_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}

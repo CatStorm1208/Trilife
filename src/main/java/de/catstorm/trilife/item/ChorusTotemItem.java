@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import static de.catstorm.trilife.Trilife.LOGGER;
+import net.minecraft.text.Text;
 import net.minecraft.world.event.GameEvent;
 
 public class ChorusTotemItem extends TotemItem{
@@ -26,6 +27,9 @@ public class ChorusTotemItem extends TotemItem{
                 break;
             }
             else n++;
+        }
+        if (n == 16) {
+            owner.sendMessage(Text.of("Could not find a safe teleport location! Get rekt lol"));
         }
     }
 }

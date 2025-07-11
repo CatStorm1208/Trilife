@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:fermented_spider_eye"
+        },
+        {
+            "item": "minecraft:golden_carrot"
+        },
+        {
+            "item": "minecraft:sugar"
+        },
+        {
+            "item": "minecraft:turtle_scute"
+        },
+        {
+            "item": "trilife:empty_totem"
+        }
+    ],
+    "result": {
+        "id": "trilife:sneaky_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}

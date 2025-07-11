@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "SDS",
+        "WWW"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:milk_bucket"
+        },
+        "S": {
+            "item": "minecraft:sugar"
+        },
+        "D": {
+            "item": "minecraft:dragon_egg"
+        },
+        "W": {
+            "item": "minecraft:wheat"
+        }
+    },
+    "result": {
+        "id": "trilife:heart_cake",
+        "count": 1
+    },
+    "group": "stuff"
+}

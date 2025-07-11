@@ -6,5 +6,11 @@
     "item.trilife.heart_totem": "Heart Totem",
     "item.trilife.linked_totem": "Linked Totem",
     "item.trilife.sneaky_totem": "Sneaky Totem",
-    "item.trilife.windburst_totem": "Windburst Totem"
+    "item.trilife.windburst_totem": "Windburst Totem",
+    "item.trilife.heart_cake": "Heart Cake",
+    "item.trilife.light_iron_sword": "Iron Knife",
+    "item.trilife.light_diamond_sword": "Diamond Knife",
+    "item.trilife.light_netherite_sword": "Netherite Knife",
+
+    "itemGroup.trilife.trilife_group": "Trilife"
 }

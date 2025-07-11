@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#GE",
+        "GTG",
+        "EG#"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:diamond"
+        },
+        "G": {
+            "item": "minecraft:golden_apple"
+        },
+        "E": {
+            "item": "minecraft:emerald_block"
+        },
+        "T": {
+            "item": "trilife:empty_totem"
+        }
+    },
+    "result": {
+        "id": "trilife:heart_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}

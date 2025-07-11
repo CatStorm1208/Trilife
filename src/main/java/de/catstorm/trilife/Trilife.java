@@ -1,14 +1,12 @@
 package de.catstorm.trilife;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import de.catstorm.trilife.item.HeartTotemItem;
-import de.catstorm.trilife.item.TotemItem;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.PlayersAlivePayload;
+import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -35,6 +33,7 @@ public class Trilife implements ModInitializer {
 
         PayloadTypeRegistry.playS2C().register(PlayersAlivePayload.ID, PlayersAlivePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLivesPayload.ID, PlayerLivesPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
 
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) { //I really hope no one will question me
@@ -79,6 +78,10 @@ public class Trilife implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal("trilife")
+                .then(CommandManager.literal("increment")
+                    .requires(source -> source.hasPermissionLevel(4))
+                    .then(CommandManager.argument("player", EntityArgumentType.player())
+                        .executes(Trilife::trilifeIncrementCommand)))
                 .then(CommandManager.literal("init")
                     .requires(source -> source.hasPermissionLevel(4))
                     .executes(Trilife::trilifeInitCommand))
@@ -86,19 +89,51 @@ public class Trilife implements ModInitializer {
                     .requires(source -> source.hasPermissionLevel(4))
                     .then(CommandManager.argument("players", EntityArgumentType.players())
                         .then(CommandManager.argument("lives", IntegerArgumentType.integer())
-                            .executes(Trilife::trilifeSetLivesCommand))))
-                .then(CommandManager.literal("PvPZoneExempt")
-                    .requires(source -> source.hasPermissionLevel(4))
-                    .then(CommandManager.argument("players", EntityArgumentType.players())
-                        .then(CommandManager.argument("value", BoolArgumentType.bool())
-                            .executes(Trilife::trilifeSetPvPExemptCommand)))));
+                            .executes(Trilife::trilifeSetLivesCommand)))));
         });
 
         TrilifeItems.initItems();
     }
 
+    private static int trilifeIncrementCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        var player = EntityArgumentType.getPlayer(context, "player");
+
+        PlayerData playerState = StateSaverAndLoader.getPlayerState(player);
+        playerState.lives += 1;
+
+        MinecraftServer server = player.getServer();
+        assert server != null;
+
+        ServerPlayerEntity playerEntity = server.getPlayerManager().getPlayer(player.getUuid());
+        server.execute(() -> {
+            ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
+        });
+
+        switch (playerState.lives) {
+            case 1 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                "team join reds " + player.getName().getString());
+            case 2 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                "team join yellows " + player.getName().getString());
+            case 3 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                "team join greens " + player.getName().getString());
+            case 4 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                "team join blues " + player.getName().getString());
+        }
+        return 0;
+    }
+
     private static int trilifeInitCommand(CommandContext<ServerCommandSource> context) {
         MinecraftServer server = context.getSource().getServer();
+        //blues
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+            "team add blues");
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+            "team modify blues friendlyFire true");
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+            "team modify blues seeFriendlyInvisibles false");
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+            "team modify blues color blue");
+
         //greens
         server.getCommandManager().executeWithPrefix(server.getCommandSource(),
             "team add greens");
@@ -155,17 +190,9 @@ public class Trilife implements ModInitializer {
                     "team join yellows " + player.getName().getString());
                 case 3 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
                     "team join greens " + player.getName().getString());
+                case 4 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                    "team join blues " + player.getName().getString());
             }
-        }
-        return 0;
-    }
-
-    //TODO: fix this system
-    private static int trilifeSetPvPExemptCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        var players = EntityArgumentType.getPlayers(context, "players");
-        var set = BoolArgumentType.getBool(context, "value");
-        for (var player : players) {
-
         }
         return 0;
     }

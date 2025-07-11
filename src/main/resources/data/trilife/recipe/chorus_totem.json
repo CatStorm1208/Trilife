@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#T#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:ender_pearl"
+        },
+        "T": {
+            "item": "trilife:empty_totem"
+        }
+    },
+    "result": {
+        "id": "trilife:chorus_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}

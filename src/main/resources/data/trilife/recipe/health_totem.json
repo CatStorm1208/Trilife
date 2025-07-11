@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#T#",
+        " # "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:glistering_melon_slice"
+        },
+        "T": {
+            "item": "trilife:empty_totem"
+        }
+    },
+    "result": {
+        "id": "trilife:health_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}
