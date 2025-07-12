@@ -29,6 +29,7 @@ public class TrilifeItems {
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()
         .nutrition(0).saturationModifier(0).alwaysEdible().build()));
+    public static final Item SOUL_HEART = new Item(new Item.Settings().maxCount(1));
     public static final SwordItem LIGHT_IRON_SWORD = new SwordItem(ToolMaterials.IRON, new Item.Settings()
         .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.IRON, -2, 0.5f)));
     public static final SwordItem LIGHT_DIAMOND_SWORD = new SwordItem(ToolMaterials.DIAMOND, new Item.Settings()
@@ -49,6 +50,7 @@ public class TrilifeItems {
             entries.add(LINKED_TOTEM);
 
             entries.add(HEART_CAKE);
+            entries.add(SOUL_HEART);
 
             entries.add(LIGHT_IRON_SWORD);
             entries.add(LIGHT_DIAMOND_SWORD);
@@ -68,6 +70,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "light_diamond_sword"), LIGHT_DIAMOND_SWORD);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "light_iron_sword"), LIGHT_IRON_SWORD);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "light_netherite_sword"), LIGHT_NETHERITE_SWORD);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "soul_heart"), SOUL_HEART);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }
