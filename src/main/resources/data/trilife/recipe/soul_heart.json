@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "SXS",
+        "X#X",
+        "SXS"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:soul_sand"
+        },
+        "X": {
+            "item": "minecraft:soul_soil"
+        },
+        "#":{
+            "item": "minecraft:nether_star"
+        }
+    },
+    "result": {
+        "id": "trilife:soul_heart",
+        "count": 1
+    },
+    "group": "stuff"
+}

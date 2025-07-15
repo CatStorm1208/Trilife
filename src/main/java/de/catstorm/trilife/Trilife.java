@@ -12,10 +12,11 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.server.MinecraftServer;
@@ -38,10 +39,22 @@ public class Trilife implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(PlayerLivesPayload.ID, PlayerLivesPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
 
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
+
+            server.execute(() -> {
+                ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives));
+            });
+        });
+
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) { //I really hope no one will question me
-                LootPool.Builder poolBuilder = LootPool.builder()
-                    .with(ItemEntry.builder(TrilifeItems.EMPTY_TOTEM));
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.EMPTY_TOTEM));
+
+                tableBuilder.pool(poolBuilder);
+            }
+            else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:chests/ancient_city_ice_box]")) {
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(Items.ACACIA_FENCE)); //NOTE: placeholder
 
                 tableBuilder.pool(poolBuilder);
             }
@@ -137,6 +150,9 @@ public class Trilife implements ModInitializer {
                     ServerPlayNetworking.send(revived, new PlayerLivesPayload(revivedState.lives));
                     ServerPlayNetworking.send(executor, new PlayerLivesPayload(executorState.lives));
                 });
+
+                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                    "tp " + revived.getName().getString() + " " + executor.getName().getString());
 
                 item.decrement(1);
 

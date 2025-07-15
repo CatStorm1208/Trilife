@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "SXS",
+        "XSX",
+        "SXS"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:ender_pearl"
+        },
+        "X": {
+            "item": "minecraft:chorus_fruit"
+        }
+    },
+    "result": {
+        "id": "trilife:ender_orb",
+        "count": 1
+    },
+    "group": "stuff"
+}

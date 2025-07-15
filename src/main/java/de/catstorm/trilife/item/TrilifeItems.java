@@ -36,6 +36,7 @@ public class TrilifeItems {
         .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.DIAMOND, -2, 0.5f)));
     public static final SwordItem LIGHT_NETHERITE_SWORD = new SwordItem(ToolMaterials.NETHERITE, new Item.Settings()
         .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.NETHERITE, -2, 0.5f)));
+    public static final EnderOrbItem ENDER_ORB = new EnderOrbItem(new Item.Settings().maxCount(1).maxDamage(32));
 
     //Creative mode tab
     public static final ItemGroup TRILIFE_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(EMPTY_TOTEM))
@@ -51,6 +52,7 @@ public class TrilifeItems {
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
+            entries.add(ENDER_ORB);
 
             entries.add(LIGHT_IRON_SWORD);
             entries.add(LIGHT_DIAMOND_SWORD);
@@ -71,6 +73,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "light_iron_sword"), LIGHT_IRON_SWORD);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "light_netherite_sword"), LIGHT_NETHERITE_SWORD);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "soul_heart"), SOUL_HEART);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "ender_orb"), ENDER_ORB);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }
