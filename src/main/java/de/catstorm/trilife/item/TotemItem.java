@@ -24,5 +24,12 @@ public class TotemItem extends Item {
         for (var effect : effects) {
             owner.addStatusEffect(effect);
         }
+        handleOnoAdvancement(owner);
+    }
+
+    protected void handleOnoAdvancement(LivingEntity owner) {
+        assert owner.getServer() != null;
+        owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
+            "advancement grant " + owner.getName().getString() + " only trilife:trilife/ono");
     }
 }

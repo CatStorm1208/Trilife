@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "id": "minecraft:mace"
+        },
+        "title": "Vecchio's Saviour",
+        "description": "Kill Pris.",
+        "frame": "task",
+        "hidden": true
+    },
+    "parent": "trilife:trilife/first_blood",
+    "criteria": {
+        "kill_pris": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "kill_pris"
+        ]
+    ]
+}

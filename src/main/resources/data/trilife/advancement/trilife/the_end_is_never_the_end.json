@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "id": "minecraft:netherite_axe"
+        },
+        "title": "The end is never the end...",
+        "description": "Make another player loose their last life",
+        "frame": "goal"
+    },
+    "parent": "trilife:trilife/first_blood",
+    "criteria": {
+        "end_player": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "end_player"
+        ]
+    ]
+}

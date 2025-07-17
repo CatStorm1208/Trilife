@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:heart_cake"
+        },
+        "title": "Charge me doctor!",
+        "description": "Consume the Heart Cake.",
+        "frame": "challenge"
+    },
+    "parent": "trilife:trilife/first_blood",
+    "criteria": {
+        "ate_heart_cake": {
+            "trigger": "minecraft:consume_item",
+            "conditions": {
+                "item": {
+                    "items": "trilife:heart_cake"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "ate_heart_cake"
+        ]
+    ],
+    "rewards": {
+        "experience": 1000
+    }
+}

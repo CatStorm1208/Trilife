@@ -1,9 +1,9 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " # ",
+        "D#D",
         "#T#",
-        " # "
+        "D#D"
     ],
     "key": {
         "#": {
@@ -11,6 +11,9 @@
         },
         "T": {
             "item": "trilife:empty_totem"
+        },
+        "D": {
+            "item": "minecraft:diamond"
         }
     },
     "result": {

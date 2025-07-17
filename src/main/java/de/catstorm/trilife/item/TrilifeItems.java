@@ -24,7 +24,9 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
     public static final WindburstTotemItem WINDBURST_TOTEM = new WindburstTotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
-    public static final TotemItem LINKED_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f); //TODO: make linked totem functional
+    public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1), 1.0f,
+        new StatusEffectInstance(StatusEffects.ABSORPTION, 300*20, 4),
+        new StatusEffectInstance(StatusEffects.REGENERATION, 30*20, 1));
 
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()

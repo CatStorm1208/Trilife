@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:health_totem"
+        },
+        "title": "ono",
+        "description": "Pop your first totem.",
+        "frame": "task"
+    },
+    "parent": "trilife:trilife/root",
+    "criteria": {
+        "impossible": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "impossible"
+        ]
+    ]
+}

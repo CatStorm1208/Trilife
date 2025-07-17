@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:empty_totem"
+        },
+        "title": "Trilife",
+        "description": "It begins...",
+        "background": "minecraft:textures/block/diamond_block.png",
+        "frame": "task"
+    },
+    "criteria": {
+        "impossible": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "impossible"
+        ]
+    ]
+}

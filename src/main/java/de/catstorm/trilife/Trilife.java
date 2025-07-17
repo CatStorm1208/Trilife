@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.catstorm.trilife.item.TrilifeItems;
+import de.catstorm.trilife.records.LinkPlayersPayload;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.PlayersAlivePayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
@@ -38,6 +40,7 @@ public class Trilife implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(PlayersAlivePayload.ID, PlayersAlivePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLivesPayload.ID, PlayerLivesPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(LinkPlayersPayload.ID, LinkPlayersPayload.CODEC);
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
@@ -75,11 +78,30 @@ public class Trilife implements ModInitializer {
                 server.execute(() -> {
                     ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
                 });
+
+                //Kill Piss advancement
+                if (damageSource.getSource() instanceof PlayerEntity) {
+                    PlayerEntity killer = (PlayerEntity) damageSource.getSource();
+
+                    assert entity.getServer() != null;
+                    if (entity.getUuidAsString().equals("ff1337da-66b4-46af-bc1d-51714fb8f93d") ||
+                        entity.getCommandTags().contains("trilife:pisstest")) {
+                        entity.getServer().getCommandManager().executeWithPrefix(entity.getServer().getCommandSource(),
+                            "advancement grant " + killer.getName().getString() + " only trilife:trilife/vecchios_saviour");
+                    }
+                    if (playerState.lives == 0) {
+                        entity.getServer().getCommandManager().executeWithPrefix(entity.getServer().getCommandSource(),
+                            "advancement grant " + killer.getName().getString() + " only trilife:trilife/the_end_is_never_the_end");
+                    }
+                }
             }
         });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal("trilife")
+                .then(CommandManager.literal("link")
+                    .then(CommandManager.argument("player", EntityArgumentType.player())
+                        .executes(Trilife::trilifeLinkCommand)))
                 .then(CommandManager.literal("revive")
                     .then(CommandManager.argument("player", EntityArgumentType.player())
                         .executes(Trilife::trilifeReviveCommand)))
@@ -122,6 +144,36 @@ public class Trilife implements ModInitializer {
         }
     }
 
+    private static int trilifeLinkCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        MinecraftServer server = context.getSource().getServer();
+        assert server != null;
+        assert context.getSource().getPlayer() != null;
+        PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+        if (context.getSource().getPlayer().getUuidAsString().equals(player.getUuidAsString())) {
+            context.getSource().getPlayer().sendMessage(Text.of("You can't link a totem to yourself!"));
+            return 1;
+        }
+
+        PlayerData receiverState = StateSaverAndLoader.getPlayerState(player);
+        PlayerData senderState = StateSaverAndLoader.getPlayerState(context.getSource().getPlayer());
+        if (!receiverState.link.startsWith("ready")) {
+            context.getSource().getPlayer().sendMessage(Text.of("The receiver is not ready to link!"));
+            return 1;
+        }
+        if (!senderState.link.startsWith("ready")) {
+            context.getSource().getPlayer().sendMessage(Text.of("Please unlink before linking to another player"));
+        }
+        receiverState.link = "request:" + context.getSource().getPlayer().getUuidAsString();
+
+        ServerPlayerEntity receiver = server.getPlayerManager().getPlayer(player.getUuid());
+        ServerPlayerEntity sender = server.getPlayerManager().getPlayer(context.getSource().getPlayer().getUuid());
+        server.execute(() -> {
+            ServerPlayNetworking.send(receiver, new LinkPlayersPayload(receiverState.link));
+            ServerPlayNetworking.send(sender, new LinkPlayersPayload("sent:" + player.getUuidAsString()));
+        });
+        return 0;
+    }
+
     private static int trilifeReviveCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         for (var item : context.getSource().getPlayer().getHandItems()) {
             if (item.isOf(TrilifeItems.SOUL_HEART)) {
@@ -153,6 +205,10 @@ public class Trilife implements ModInitializer {
 
                 server.getCommandManager().executeWithPrefix(server.getCommandSource(),
                     "tp " + revived.getName().getString() + " " + executor.getName().getString());
+                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                    "advancement grant " + revived.getName().getString() + " only trilife:trilife/im_alive_is_nice");
+                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+                    "advancement grant " + executor.getName().getString() + " only trilife:trilife/necromancer");
 
                 item.decrement(1);
 
@@ -233,6 +289,8 @@ public class Trilife implements ModInitializer {
 
         server.getCommandManager().executeWithPrefix(server.getCommandSource(),
             "trilife setLives @a 3");
+        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
+            "advancement grant @a only trilife:trilife/root");
 
         return 0;
     }

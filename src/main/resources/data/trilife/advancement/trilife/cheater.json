@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:heart_totem"
+        },
+        "title": "Cheater!",
+        "description": "Pop a heart totem.",
+        "frame": "challenge",
+        "hidden": true
+    },
+    "parent": "trilife:trilife/ono",
+    "criteria": {
+        "get_resurrected": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "get_resurrected"
+        ]
+    ]
+}

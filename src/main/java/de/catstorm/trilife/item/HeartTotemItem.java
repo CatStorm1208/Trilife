@@ -24,5 +24,9 @@ public class HeartTotemItem extends TotemItem {
         server.execute(() -> {
             ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
         });
+
+        assert owner.getServer() != null;
+        owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
+            "advancement grant " + owner.getName().getString() + " only trilife:trilife/cheater");
     }
 }

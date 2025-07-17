@@ -1,0 +1,28 @@
+{
+    "display": {
+        "icon": {
+            "id": "minecraft:iron_axe"
+        },
+        "title": "First blood",
+        "description": "Kill your first player.",
+        "frame": "task"
+    },
+    "parent": "trilife:trilife/root",
+    "criteria": {
+        "killed_player": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type_specific": {
+                        "type": "minecraft:player"
+                    }
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "killed_player"
+        ]
+    ]
+}

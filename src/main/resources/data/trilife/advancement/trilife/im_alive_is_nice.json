@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:soul_heart"
+        },
+        "title": "I'm alive... is nice",
+        "description": "Yes, this is stupid",
+        "frame": "goal",
+        "hidden": false
+    },
+    "parent": "trilife:trilife/ono",
+    "criteria": {
+        "get_resurrected": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "get_resurrected"
+        ]
+    ]
+}
