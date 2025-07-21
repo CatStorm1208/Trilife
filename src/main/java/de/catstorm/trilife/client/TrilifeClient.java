@@ -50,6 +50,7 @@ public class TrilifeClient implements ClientModInitializer {
     }
 
     private static void handleLinkPlayersPayload(LinkPlayersPayload payload, ClientPlayNetworking.Context context) {
+        //asdasd
         ClientPlayerEntity player = context.client().player;
         assert player != null;
         assert player.getServer() != null;
