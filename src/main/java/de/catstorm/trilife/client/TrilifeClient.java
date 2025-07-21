@@ -2,6 +2,7 @@ package de.catstorm.trilife.client;
 
 import de.catstorm.trilife.hud.ThreeHeartsOverlay;
 import de.catstorm.trilife.item.TotemItem;
+import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.LinkPlayersPayload;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
@@ -12,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import de.catstorm.trilife.records.PlayersAlivePayload;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import java.util.UUID;
@@ -29,18 +31,21 @@ public class TrilifeClient implements ClientModInitializer {
         ClientPlayerEntity player = context.client().player;
         assert player != null;
         lives = payload.playerLifeCount();
-        //player.sendMessage(Text.of("Your Life count: " + payload.playerLifeCount())); //TODO: probably remove this line
+        //player.sendMessage(Text.of("Your Life count: " + payload.playerLifeCount()));
     }
 
     private static void handleTotemFloatPayload(TotemFloatPayload payload, ClientPlayNetworking.Context context) {
         ClientPlayerEntity player = context.client().player;
         assert player != null;
         int useless = payload.useless(); //Pls don't ask why
-        for (var item : player.getHandItems()) {
+        if (useless == 0) for (var item : player.getHandItems()) {
             if (item.getItem() instanceof TotemItem) {
                 MinecraftClient.getInstance().gameRenderer.showFloatingItem(item);
                 break;
             }
+        }
+        else if (useless == 1) {
+            MinecraftClient.getInstance().gameRenderer.showFloatingItem(new ItemStack(TrilifeItems.GENFROSTED));
         }
     }
 
@@ -50,14 +55,32 @@ public class TrilifeClient implements ClientModInitializer {
         assert player.getServer() != null;
         String link = payload.link();
         if (link.startsWith("ready")) {
+            if (link.equals("ready:received")) {
+                player.sendMessage(Text.of("Your link-request was denied!"));
+            }
+            else if (link.equals("ready:sent")) {
+                player.sendMessage(Text.of("The link-request was denied successfully!"));
+            }
+            else if (link.equals("ready:unlink_sent")) {
+                player.sendMessage(Text.of("You were successfully unlinked!"));
+            }
+            else if (link.startsWith("ready:unlink_received:")) {
+                String name = link.split(":")[2];
+                player.sendMessage(Text.of("You have been unlinked from " + name + "!"));
+            }
             return;
         }
 
-        //TODO: RELEASE ME!!!!!!!
         PlayerEntity sender = player.getServer().getPlayerManager().getPlayer(UUID.fromString(link.split(":")[1]));
         assert sender != null;
         if (link.startsWith("request:")) {
             player.sendMessage(Text.of(sender.getName().getString() + "wishes to link with you!\n'/trilife accept' to accept\n'/trilife deny' to deny"));
+        }
+        else if (link.startsWith("sent:")) {
+            player.sendMessage(Text.of("Sent a link-request to " + sender.getName().getString() + "!"));
+        }
+        else if (link.startsWith("linked:")) {
+            player.sendMessage(Text.of("Successfully linked with " + sender.getName().getString() + "!"));
         }
     }
 
