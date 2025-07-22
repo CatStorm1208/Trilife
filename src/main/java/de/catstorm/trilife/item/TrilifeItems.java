@@ -1,6 +1,9 @@
 package de.catstorm.trilife.item;
 
+import com.mojang.serialization.Codec;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -12,7 +15,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import static de.catstorm.trilife.Trilife.MOD_ID;
 
+import java.util.UUID;
+
 public class TrilifeItems {
+    //Components
+    //Could be moved to a TrilifeComponents class later
+    public static final ComponentType<String> LINKED_PLAYER_COMPONENT = ComponentType.<String>builder().codec(Codec.STRING).build();
+
     //Totems
     public static final Item EMPTY_TOTEM = new Item(new Item.Settings().maxCount(1));
     public static final ChorusTotemItem CHORUS_TOTEM = new ChorusTotemItem(new Item.Settings().maxCount(1), 1.0f);
@@ -25,7 +34,10 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
     public static final WindburstTotemItem WINDBURST_TOTEM = new WindburstTotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
-    public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1), 1.0f,
+    public static final Item LINKABLE_TOTEM = new Item(new Item.Settings().maxCount(1));
+    public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1)
+        .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
+        .component(LINKED_PLAYER_COMPONENT, ""), 1.0f,
         new StatusEffectInstance(StatusEffects.ABSORPTION, 300*20, 4),
         new StatusEffectInstance(StatusEffects.REGENERATION, 30*20, 1));
 
@@ -52,7 +64,7 @@ public class TrilifeItems {
             entries.add(HEALTH_TOTEM);
             entries.add(ARMOUR_TOTEM);
             entries.add(WINDBURST_TOTEM);
-            entries.add(LINKED_TOTEM);
+            entries.add(LINKABLE_TOTEM);
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
@@ -64,6 +76,8 @@ public class TrilifeItems {
         })).build();
 
     public static void initItems() {
+        Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "linked_player"), LINKED_PLAYER_COMPONENT);
+
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "empty_totem"), EMPTY_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "chorus_totem"), CHORUS_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "heart_totem"), HEART_TOTEM);
@@ -79,6 +93,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "soul_heart"), SOUL_HEART);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "ender_orb"), ENDER_ORB);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "genfrosted"), GENFROSTED);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "linkable_totem"), LINKABLE_TOTEM);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }

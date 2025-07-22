@@ -4,7 +4,7 @@
             "id": "trilife:heart_totem"
         },
         "title": "Cheater!",
-        "description": "Pop a heart totem.",
+        "description": "Pop a heart totem",
         "frame": "challenge",
         "hidden": true
     },

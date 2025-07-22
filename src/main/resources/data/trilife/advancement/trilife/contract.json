@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "id": "trilife:linked_totem"
+        },
+        "title": "The Contract",
+        "description": "Link a totem to your life",
+        "frame": "goal"
+    },
+    "parent": "trilife:trilife/ono",
+    "criteria": {
+        "contract": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "requirements": [
+        [
+            "contract"
+        ]
+    ]
+}

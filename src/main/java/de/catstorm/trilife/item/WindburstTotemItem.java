@@ -21,6 +21,8 @@ public class WindburstTotemItem extends TotemItem {
         for (var target : targets) {
             owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
                 "execute as " + target.getUuidAsString() + " at @s run summon wind_charge ~ ~ ~ {Motion:[0.0,-10.0,0.0]}");
+            owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
+                "execute as " + target.getUuidAsString() + " at @s run summon wind_charge ~ ~ ~ {Motion:[0.0,-10.0,0.0]}");
         }
     }
 }

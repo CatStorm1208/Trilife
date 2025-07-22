@@ -4,106 +4,33 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.catstorm.trilife.item.TrilifeItems;
-import de.catstorm.trilife.records.LinkPlayersPayload;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import static de.catstorm.trilife.Trilife.LOGGER;
 
 public class TrilifeCommands {
-    protected static int unlink(CommandContext<ServerCommandSource> context) {
-        MinecraftServer server = context.getSource().getServer();
-        assert server != null;
+    protected static int link(CommandContext<ServerCommandSource> context) {
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        assert player != null;
+        var item = player.getInventory().main.get(player.getInventory().selectedSlot);
+        if (item.isOf(TrilifeItems.LINKABLE_TOTEM)) {
+            item = new ItemStack(TrilifeItems.LINKED_TOTEM);
+            item.set(TrilifeItems.LINKED_PLAYER_COMPONENT, player.getUuidAsString());
+            player.getInventory().setStack(player.getInventory().selectedSlot, item);
 
-        ServerPlayerEntity executor = context.getSource().getPlayer();
-        assert executor != null;
-        PlayerData executorState = StateSaverAndLoader.getPlayerState(executor);
-
-        ServerPlayerEntity linked = server.getPlayerManager().getPlayer(executorState.link.split(":")[1]);
-        assert linked != null;
-        PlayerData linkedState = StateSaverAndLoader.getPlayerState(linked);
-
-        executorState.link = "ready:unlink_sent";
-        linkedState.link = "ready:unlink_received:" + executor.getName().getString();
-
-        server.execute(() -> {
-            ServerPlayNetworking.send(executor, new LinkPlayersPayload(executorState.link));
-            ServerPlayNetworking.send(linked, new LinkPlayersPayload(linkedState.link));
-        });
-        return 0;
-    }
-
-    protected static int accept(CommandContext<ServerCommandSource> context) {
-        MinecraftServer server = context.getSource().getServer();
-        assert server != null;
-        assert context.getSource().getPlayer() != null;
-        PlayerData acceptorSate = StateSaverAndLoader.getPlayerState(context.getSource().getPlayer());
-
-        ServerPlayerEntity requester = server.getPlayerManager().getPlayer(acceptorSate.link.split(":")[1]);
-        assert requester != null;
-        PlayerData requesterState = StateSaverAndLoader.getPlayerState(requester);
-
-        acceptorSate.link = "linked:" + requester.getUuidAsString();
-        requesterState.link = "linked:" + requester.getUuidAsString();
-        server.execute(() -> {
-            ServerPlayNetworking.send(context.getSource().getPlayer(), new LinkPlayersPayload(acceptorSate.link));
-            ServerPlayNetworking.send(requester, new LinkPlayersPayload(requesterState.link));
-        });
-        return 0;
-    }
-
-    protected static int deny(CommandContext<ServerCommandSource> context) {
-        MinecraftServer server = context.getSource().getServer();
-        assert server != null;
-        assert context.getSource().getPlayer() != null;
-        PlayerData acceptorSate = StateSaverAndLoader.getPlayerState(context.getSource().getPlayer());
-
-        ServerPlayerEntity requester = server.getPlayerManager().getPlayer(acceptorSate.link.split(":")[1]);
-        assert requester != null;
-        PlayerData requesterState = StateSaverAndLoader.getPlayerState(requester);
-
-        acceptorSate.link = "ready:received";
-        requesterState.link = "ready:sent";
-        server.execute(() -> {
-            ServerPlayNetworking.send(context.getSource().getPlayer(), new LinkPlayersPayload(acceptorSate.link));
-            ServerPlayNetworking.send(requester, new LinkPlayersPayload(requesterState.link));
-        });
-        return 0;
-    }
-
-    protected static int link(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        MinecraftServer server = context.getSource().getServer();
-        assert server != null;
-        assert context.getSource().getPlayer() != null;
-        PlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-        if (context.getSource().getPlayer().getUuidAsString().equals(player.getUuidAsString())) {
-            context.getSource().getPlayer().sendMessage(Text.of("You can't link a totem to yourself!"));
-            return 1;
+            context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource().getServer().getCommandSource(),
+                "advancement grant " + player.getName().getString() + " only trilife:trilife/contract");
+            return 0;
         }
-
-        PlayerData receiverState = StateSaverAndLoader.getPlayerState(player);
-        PlayerData senderState = StateSaverAndLoader.getPlayerState(context.getSource().getPlayer());
-        if (!receiverState.link.startsWith("ready")) {
-            context.getSource().getPlayer().sendMessage(Text.of("The receiver is not ready to link!"));
-            return 1;
-        }
-        if (!senderState.link.startsWith("ready")) {
-            context.getSource().getPlayer().sendMessage(Text.of("Please unlink before linking to another player"));
-        }
-        receiverState.link = "request:" + context.getSource().getPlayer().getUuidAsString();
-
-        ServerPlayerEntity receiver = server.getPlayerManager().getPlayer(player.getUuid());
-        ServerPlayerEntity sender = server.getPlayerManager().getPlayer(context.getSource().getPlayer().getUuid());
-        server.execute(() -> {
-            ServerPlayNetworking.send(receiver, new LinkPlayersPayload(receiverState.link));
-            ServerPlayNetworking.send(sender, new LinkPlayersPayload("sent:" + player.getUuidAsString()));
-        });
-        return 0;
+        player.sendMessage(Text.of("You are not holding an unlinked Linked Totem!"));
+        return 1;
     }
 
     protected static int revive(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

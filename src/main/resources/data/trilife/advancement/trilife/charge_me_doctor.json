@@ -4,7 +4,7 @@
             "id": "trilife:heart_cake"
         },
         "title": "Charge me doctor!",
-        "description": "Consume the Heart Cake.",
+        "description": "Consume the Heart Cake",
         "frame": "challenge"
     },
     "parent": "trilife:trilife/first_blood",

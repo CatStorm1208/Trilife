@@ -4,7 +4,7 @@
             "id": "trilife:health_totem"
         },
         "title": "ono",
-        "description": "Pop your first totem.",
+        "description": "Pop your first totem",
         "frame": "task"
     },
     "parent": "trilife:trilife/root",

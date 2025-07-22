@@ -4,7 +4,7 @@
             "id": "minecraft:iron_axe"
         },
         "title": "First blood",
-        "description": "Kill your first player.",
+        "description": "Kill your first player",
         "frame": "task"
     },
     "parent": "trilife:trilife/root",
