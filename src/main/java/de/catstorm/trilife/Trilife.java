@@ -1,6 +1,7 @@
 package de.catstorm.trilife;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.PlayersAlivePayload;
@@ -33,8 +34,6 @@ public class Trilife implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Initialised Trilife!");
-
         PayloadTypeRegistry.playS2C().register(PlayersAlivePayload.ID, PlayersAlivePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLivesPayload.ID, PlayerLivesPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
@@ -58,7 +57,7 @@ public class Trilife implements ModInitializer {
                 tableBuilder.pool(poolBuilder);
             }
             else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:chests/ancient_city_ice_box]")) {
-                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(Items.ACACIA_FENCE)); //NOTE: placeholder
+                LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.DARK_ORB));
 
                 tableBuilder.pool(poolBuilder);
             }
@@ -120,6 +119,9 @@ public class Trilife implements ModInitializer {
         });
 
         TrilifeItems.initItems();
+        TrilifeEntityTypes.initEntities();
+
+        LOGGER.info("Initialised Trilife! Also, ignore the error above lol.");
     }
 
     public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {

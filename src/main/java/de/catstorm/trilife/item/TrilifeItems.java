@@ -53,6 +53,7 @@ public class TrilifeItems {
         .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.NETHERITE, -2, 0.5f)));
     public static final EnderOrbItem ENDER_ORB = new EnderOrbItem(new Item.Settings().maxCount(1).maxDamage(32));
     public static final Item GENFROSTED = new Item(new Item.Settings().maxCount(1));
+    public static final DarkOrbItem DARK_ORB = new DarkOrbItem(new Item.Settings().maxCount(16));
 
     //Creative mode tab
     public static final ItemGroup TRILIFE_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(EMPTY_TOTEM))
@@ -69,6 +70,7 @@ public class TrilifeItems {
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
             entries.add(ENDER_ORB);
+            entries.add(DARK_ORB);
 
             entries.add(LIGHT_IRON_SWORD);
             entries.add(LIGHT_DIAMOND_SWORD);
@@ -94,6 +96,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "ender_orb"), ENDER_ORB);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "genfrosted"), GENFROSTED);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "linkable_totem"), LINKABLE_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "dark_orb"), DARK_ORB);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }
