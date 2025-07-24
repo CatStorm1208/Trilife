@@ -1,0 +1,8 @@
+{
+    "dark_orb_hit": {
+        "subtitles": "subtitles.trilife.dark_orb_hit",
+        "sounds": [
+            "trilife:dark_orb_hit"
+        ]
+    }
+}

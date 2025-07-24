@@ -1,11 +1,16 @@
 package de.catstorm.trilife.entity;
 
+import de.catstorm.trilife.sound.TrilifeSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractWindChargeEntity;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
@@ -13,7 +18,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class DarkOrbEntity extends AbstractWindChargeEntity {
-    private int r = 3;
 
     public DarkOrbEntity(EntityType<? extends AbstractWindChargeEntity> entityType, World world) {
         super(entityType, world);
@@ -48,14 +52,22 @@ public class DarkOrbEntity extends AbstractWindChargeEntity {
     }
 
     protected void bust(Vec3d pos) {
-        var targets = this.getWorld().getOtherEntities(this,
-            new Box(pos.getX()-r, pos.getY()-r, pos.getZ()-r,
-                    pos.getX()+r, pos.getY()+r, pos.getZ()+r));
+        World world = this.getWorld();
+        int r = 3;
+        var targets = world.getOtherEntities(this,
+            new Box(pos.getX()- r, pos.getY()- r, pos.getZ()- r,
+                    pos.getX()+ r, pos.getY()+ r, pos.getZ()+ r));
 
         for (var target : targets) {
             if (target instanceof LivingEntity livingEntity) {
                 livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 10*20, 0));
                 livingEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 10*20, 1));
+            }
+            if (target instanceof ServerPlayerEntity serverPlayer) {
+                serverPlayer.networkHandler.sendPacket(new PlaySoundS2CPacket(
+                    RegistryEntry.of(TrilifeSounds.DARK_ORB_HIT), SoundCategory.NEUTRAL,
+                    serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1.5f, 0.7f,
+                    world.getRandom().nextLong()));
             }
         }
         discard();

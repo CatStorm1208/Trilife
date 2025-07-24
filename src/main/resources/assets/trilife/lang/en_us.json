@@ -16,5 +16,9 @@
     "item.trilife.ender_orb": "Ender Orb",
     "item.trilife.dark_orb": "Dark Orb",
 
-    "itemGroup.trilife.trilife_group": "Trilife"
+    "entity.trilife.dark_orb": "Dark Orb",
+
+    "itemGroup.trilife.trilife_group": "Trilife",
+
+    "subtitles.trilife.dark_orb_hit": "Dark Orb bursts"
 }

@@ -9,13 +9,16 @@ import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ServerScoreboard;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import static de.catstorm.trilife.Trilife.LOGGER;
+import net.minecraft.util.Formatting;
 
 public class TrilifeCommands {
+    //NOTE: AdvancementCommand.java
     protected static int link(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         assert player != null;
@@ -34,6 +37,7 @@ public class TrilifeCommands {
     }
 
     protected static int revive(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        assert context.getSource().getPlayer() != null;
         for (var item : context.getSource().getPlayer().getHandItems()) {
             if (item.isOf(TrilifeItems.SOUL_HEART)) {
                 assert context.getSource().getPlayer() != null;
@@ -62,8 +66,7 @@ public class TrilifeCommands {
                     ServerPlayNetworking.send(executor, new PlayerLivesPayload(executorState.lives));
                 });
 
-                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                    "tp " + revived.getName().getString() + " " + executor.getName().getString());
+                revived.updatePosition(executor.getX(), executor.getY(), executor.getZ());
                 server.getCommandManager().executeWithPrefix(server.getCommandSource(),
                     "advancement grant " + revived.getName().getString() + " only trilife:trilife/im_alive_is_nice");
                 server.getCommandManager().executeWithPrefix(server.getCommandSource(),
@@ -88,66 +91,46 @@ public class TrilifeCommands {
 
         ServerPlayerEntity playerEntity = server.getPlayerManager().getPlayer(player.getUuid());
         server.execute(() -> {
+            assert playerEntity != null;
             ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
         });
 
-        switch (playerState.lives) {
-            case 1 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                "team join reds " + player.getName().getString());
-            case 2 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                "team join yellows " + player.getName().getString());
-            case 3 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                "team join greens " + player.getName().getString());
-            case 4 -> server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                "team join blues " + player.getName().getString());
-        }
+        Trilife.evalLives(player, playerState.lives, server);
         return 0;
     }
 
     protected static int init(CommandContext<ServerCommandSource> context) {
         MinecraftServer server = context.getSource().getServer();
-        //blues
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team add blues");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify blues friendlyFire true");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify blues seeFriendlyInvisibles false");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify blues color blue");
+        ServerScoreboard scoreboard = server.getScoreboard();
 
-        //greens
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team add greens");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify greens friendlyFire true");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify greens seeFriendlyInvisibles false");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify greens color green");
+        Team blues = scoreboard.addTeam("blues");
+        blues.setFriendlyFireAllowed(true);
+        blues.setShowFriendlyInvisibles(false);
+        blues.setColor(Formatting.BLUE);
 
-        //yellows
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team add yellows");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify yellows friendlyFire true");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify yellows seeFriendlyInvisibles false");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify yellows color yellow");
+        Team greens = scoreboard.addTeam("greens");
+        greens.setFriendlyFireAllowed(true);
+        greens.setShowFriendlyInvisibles(false);
+        greens.setColor(Formatting.GREEN);
 
-        //reds
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team add reds");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify reds friendlyFire true");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify reds seeFriendlyInvisibles false");
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "team modify reds color red");
+        Team yellows = scoreboard.addTeam("yellows");
+        yellows.setFriendlyFireAllowed(true);
+        yellows.setShowFriendlyInvisibles(false);
+        yellows.setColor(Formatting.YELLOW);
 
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "trilife setLives @a 3");
+        Team reds = scoreboard.addTeam("reds");
+        reds.setFriendlyFireAllowed(true);
+        reds.setShowFriendlyInvisibles(false);
+        reds.setColor(Formatting.RED);
+
+        for (var player : server.getPlayerManager().getPlayerList()) {
+            PlayerData playerState = StateSaverAndLoader.getPlayerState(player);
+            playerState.lives = 3;
+
+            server.execute(() -> ServerPlayNetworking.send(player, new PlayerLivesPayload(playerState.lives)));
+
+            Trilife.evalLives(player, playerState.lives, server);
+        }
         server.getCommandManager().executeWithPrefix(server.getCommandSource(),
             "advancement grant @a only trilife:trilife/root");
 
@@ -164,6 +147,7 @@ public class TrilifeCommands {
 
             ServerPlayerEntity playerEntity = server.getPlayerManager().getPlayer(player.getUuid());
             server.execute(() -> {
+                assert playerEntity != null;
                 ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
             });
 
@@ -178,9 +162,7 @@ public class TrilifeCommands {
         playerState.useless = 1;
 
         assert context.getSource().getServer() != null;
-        context.getSource().getServer().execute(() -> {
-            ServerPlayNetworking.send(context.getSource().getPlayer(), new TotemFloatPayload(playerState.useless));
-        });
+        context.getSource().getServer().execute(() -> ServerPlayNetworking.send(context.getSource().getPlayer(), new TotemFloatPayload(playerState.useless)));
         return 0;
     }
 }
