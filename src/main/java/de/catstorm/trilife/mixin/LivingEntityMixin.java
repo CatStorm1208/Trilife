@@ -16,6 +16,7 @@ import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.EvokerEntity;
+import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,19 +31,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
+import java.util.HashSet;
 import java.util.UUID;
+import static de.catstorm.trilife.Trilife.zombieInventories;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Unique private LivingEntity THIS = (LivingEntity) (Object) this;
-
-    @SuppressWarnings("unused")
-    @Shadow protected abstract boolean tryUseTotem(DamageSource source);
+    @SuppressWarnings("unused") @Shadow protected abstract boolean tryUseTotem(DamageSource source);
     @Shadow public abstract Iterable<ItemStack> getHandItems();
     @Shadow public abstract void playSound(@Nullable SoundEvent sound);
     //@Shadow protected abstract void consumeItem();
-
     //@Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
 
     @Inject(method = "eatFood", at = @At("HEAD"))
@@ -68,6 +67,21 @@ public abstract class LivingEntityMixin {
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         if (THIS instanceof EvokerEntity) {
             playSound(SoundEvents.ENTITY_EVOKER_PREPARE_WOLOLO);
+        }
+        else if (THIS instanceof HuskEntity husk) for (String tag : husk.getCommandTags()) if (tag.startsWith("ghost_")) {
+            UUID uuid = UUID.fromString(tag.split("_")[1]);
+            for (ItemStack stack : zombieInventories.getOrDefault(uuid, new HashSet<>())) {
+                THIS.dropStack(stack);
+            }
+            zombieInventories.remove(uuid);
+            break;
+        }
+    }
+
+    @Inject(method = "dropLoot", at = @At("HEAD"), cancellable = true)
+    private void dropLoot(DamageSource damageSource, boolean causedByPlayer, CallbackInfo ci) {
+        if (THIS instanceof HuskEntity) for (String tag : THIS.getCommandTags()) if (tag.startsWith("ghost_")) {
+            ci.cancel();
         }
     }
 

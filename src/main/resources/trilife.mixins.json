@@ -6,7 +6,8 @@
     "mixins": [
         "EnderPearlItemMixin",
         "EntityMixin",
-        "LivingEntityMixin"
+        "LivingEntityMixin",
+        "ZombieEntityMixin"
     ],
     "client": [
         "GameRendererMixin"

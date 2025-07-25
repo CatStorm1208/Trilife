@@ -12,20 +12,25 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 public class Trilife implements ModInitializer {
     public static final String MOD_ID = "trilife";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    //TODO: make shit persist through restarts ffs
     protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
+    public static final HashMap<UUID, Integer> playerLogoutZombies = new HashMap<>();
+    public static final HashMap<UUID, Set<ItemStack>> zombieInventories = new HashMap<>();
 
     @Override
     public void onInitialize() {
