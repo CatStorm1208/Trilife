@@ -6,9 +6,11 @@
     "mixins": [
         "EnderPearlItemMixin",
         "EntityMixin",
-        "LivingEntityMixin"
+        "LivingEntityMixin",
+        "PlayerEntityMixin"
     ],
     "client": [
+        "EntityRendererMixin",
         "GameRendererMixin"
     ],
     "injectors": {

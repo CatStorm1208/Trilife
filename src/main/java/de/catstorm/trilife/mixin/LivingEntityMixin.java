@@ -12,6 +12,7 @@ import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.BlockState;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,6 +22,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +46,8 @@ public abstract class LivingEntityMixin {
     //@Shadow protected abstract void consumeItem();
 
     //@Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
+
+    @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
 
     @Inject(method = "eatFood", at = @At("HEAD"))
     private void eatFood(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
@@ -102,6 +106,11 @@ public abstract class LivingEntityMixin {
                         }
                         else Trilife.queuePlayerLivesChange(link, -1);
                     }
+                }
+                else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
+                    totem.onPop(source, THIS);
+                    item.decrement(1);
+                    cir.setReturnValue(false);
                 }
                 else {
                     totem.onPop(source, THIS);
