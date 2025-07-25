@@ -4,5 +4,15 @@
         "sounds": [
             "trilife:dark_orb_hit"
         ]
+    },
+    "revive_player": {
+        "sounds": [
+            "trilife:revive_player"
+        ]
+    },
+    "eat_heart_cake": {
+        "sounds": [
+            "trilife:eat_heart_cake"
+        ]
     }
 }

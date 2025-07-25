@@ -11,6 +11,7 @@ import de.catstorm.trilife.item.TotemItem;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
+import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.FoodComponent;
@@ -18,8 +19,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -59,12 +63,17 @@ public abstract class LivingEntityMixin {
             assert server != null;
 
             ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(THIS.getUuid());
+            assert serverPlayer != null;
             server.execute(() -> {
-                assert serverPlayer != null;
                 ServerPlayNetworking.send(serverPlayer, new PlayerLivesPayload(playerState.lives));
             });
 
             evalLives(THIS, playerState.lives, server);
+
+            serverPlayer.networkHandler.sendPacket(new PlaySoundS2CPacket(
+                RegistryEntry.of(TrilifeSounds.EAT_HEART_CAKE), SoundCategory.NEUTRAL,
+                serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 2f,
+                world.getRandom().nextLong()));
         }
     }
 
