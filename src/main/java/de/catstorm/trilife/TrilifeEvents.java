@@ -12,16 +12,27 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.world.World;
+import static de.catstorm.trilife.Trilife.playerLogoutZombies;
+import static de.catstorm.trilife.Trilife.zombieInventories;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class TrilifeEvents {
     public static void initEvents() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            //TODO: zombie death handling
             PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
             if (playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
                 playerState.lives += playerLivesQueue.get(handler.getPlayer().getUuid());
@@ -31,15 +42,33 @@ public class TrilifeEvents {
             server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));
         });
 
+        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
+            ServerPlayerEntity player = handler.getPlayer();
+            World world = player.getWorld();
+
+            HuskEntity zombie = new HuskEntity(EntityType.HUSK, world);
+            zombie.updatePosition(player.getX(), player.getY(), player.getZ());
+            zombie.addCommandTag("ghost_" + player.getUuidAsString());
+            zombie.setAiDisabled(true);
+            zombie.setCustomName(Text.of(player.getNameForScoreboard()));
+            world.spawnEntity(zombie);
+
+            playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //TODO: 3600*20
+
+            Set<ItemStack> drops = new HashSet<>();
+            drops.addAll(player.getInventory().main);
+            drops.addAll(player.getInventory().armor);
+            drops.addAll(player.getInventory().offHand);
+            zombieInventories.put(player.getUuid(), drops);
+        }));
+
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) { //I really hope no one will question me
                 LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.EMPTY_TOTEM));
-
                 tableBuilder.pool(poolBuilder);
             }
             else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:chests/ancient_city_ice_box]")) {
                 LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.DARK_ORB));
-
                 tableBuilder.pool(poolBuilder);
             }
         });
