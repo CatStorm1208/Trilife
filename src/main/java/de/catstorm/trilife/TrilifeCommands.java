@@ -6,14 +6,18 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
+import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -73,6 +77,11 @@ public class TrilifeCommands {
                     "advancement grant " + executor.getName().getString() + " only trilife:trilife/necromancer");
 
                 item.decrement(1);
+
+                revived.networkHandler.sendPacket(new PlaySoundS2CPacket(
+                    RegistryEntry.of(TrilifeSounds.REVIVE_PLAYER), SoundCategory.NEUTRAL,
+                    revived.getX(), revived.getY(), revived.getZ(), 1f, 1f,
+                    revived.getWorld().getRandom().nextLong()));
 
                 return 0;
             }

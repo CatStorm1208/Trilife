@@ -40,6 +40,12 @@ public class TrilifeItems {
         .component(LINKED_PLAYER_COMPONENT, ""), 1.0f,
         new StatusEffectInstance(StatusEffects.ABSORPTION, 300*20, 4),
         new StatusEffectInstance(StatusEffects.REGENERATION, 30*20, 1));
+    public static final TotemItem BACON_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
+        new StatusEffectInstance(StatusEffects.SPEED, 10*20, 1),
+        new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10*20, 1),
+        new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 1),
+        new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1));
+    public static final LootTotemItem LOOT_TOTEM = new LootTotemItem(new Item.Settings().maxCount(1), 1.0f);
 
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()
@@ -66,6 +72,8 @@ public class TrilifeItems {
             entries.add(ARMOUR_TOTEM);
             entries.add(WINDBURST_TOTEM);
             entries.add(LINKABLE_TOTEM);
+            entries.add(BACON_TOTEM);
+            entries.add(LOOT_TOTEM);
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
@@ -97,6 +105,8 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "genfrosted"), GENFROSTED);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "linkable_totem"), LINKABLE_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "dark_orb"), DARK_ORB);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "bacon_totem"), BACON_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "loot_totem"), LOOT_TOTEM);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }

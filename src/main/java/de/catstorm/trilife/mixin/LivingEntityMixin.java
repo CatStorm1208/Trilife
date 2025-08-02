@@ -11,17 +11,23 @@ import de.catstorm.trilife.item.TotemItem;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
+import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.BlockState;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +50,8 @@ public abstract class LivingEntityMixin {
     //@Shadow protected abstract void consumeItem();
     //@Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
 
+    @Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
+
     @Inject(method = "eatFood", at = @At("HEAD"))
     private void eatFood(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
         if (stack.isOf(TrilifeItems.HEART_CAKE) && !world.isClient()) {
@@ -54,12 +62,17 @@ public abstract class LivingEntityMixin {
             assert server != null;
 
             ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(THIS.getUuid());
+            assert serverPlayer != null;
             server.execute(() -> {
-                assert serverPlayer != null;
                 ServerPlayNetworking.send(serverPlayer, new PlayerLivesPayload(playerState.lives));
             });
 
             evalLives(THIS, playerState.lives, server);
+
+            serverPlayer.networkHandler.sendPacket(new PlaySoundS2CPacket(
+                RegistryEntry.of(TrilifeSounds.EAT_HEART_CAKE), SoundCategory.NEUTRAL,
+                serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 2f,
+                world.getRandom().nextLong()));
         }
     }
 
@@ -116,6 +129,11 @@ public abstract class LivingEntityMixin {
                         }
                         else Trilife.queuePlayerLivesChange(link, -1);
                     }
+                }
+                else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
+                    totem.onPop(source, THIS);
+                    item.decrement(1);
+                    cir.setReturnValue(false);
                 }
                 else {
                     totem.onPop(source, THIS);
