@@ -7,6 +7,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import static de.catstorm.trilife.Trilife.MOD_ID;
 
+@Deprecated //The meth makes her forgetful
 public record PlayersAlivePayload(Integer totalPlayersAlive) implements CustomPayload {
     public static final Identifier PlayerLivesID = Identifier.of(MOD_ID, "players_alive");
     public static final CustomPayload.Id<PlayersAlivePayload> ID = new CustomPayload.Id<>(PlayerLivesID);

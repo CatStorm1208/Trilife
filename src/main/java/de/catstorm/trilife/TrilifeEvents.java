@@ -4,10 +4,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.playerLivesQueue;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRenderEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -21,25 +20,35 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import static de.catstorm.trilife.Trilife.playerLogoutZombies;
 import static de.catstorm.trilife.Trilife.zombieInventories;
-
+import static de.catstorm.trilife.Trilife.evalLives;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TrilifeEvents {
     public static void initEvents() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            //TODO: zombie death handling
+            //TODO: discard zombie on player join
             PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
             if (playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
+                final int livesBefore = playerState.lives;
                 playerState.lives += playerLivesQueue.get(handler.getPlayer().getUuid());
+                if (livesBefore > playerState.lives) {
+                    var pos = handler.getPlayer().getRespawnTarget(false, TeleportTarget.NO_OP).pos();
+                    handler.getPlayer().setPos(pos.getX(), pos.getY(), pos.getZ());
+                    handler.getPlayer().getInventory().clear();
+                    handler.getPlayer().sendMessage(Text.of("You were killed whilst being logged out. A life has been deducted!"));
+                }
                 playerLivesQueue.remove(handler.getPlayer().getUuid());
             }
 
             server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));
+            evalLives(handler.getPlayer(), playerState.lives, server);
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> {
@@ -51,9 +60,11 @@ public class TrilifeEvents {
             zombie.addCommandTag("ghost_" + player.getUuidAsString());
             zombie.setAiDisabled(true);
             zombie.setCustomName(Text.of(player.getNameForScoreboard()));
-            world.spawnEntity(zombie);
+            if (world instanceof ServerWorld serverWorld) {
+                serverWorld.spawnEntity(zombie);
+            }
 
-            playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //TODO: 3600*20
+            playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //NOTE: 3600*20
 
             Set<ItemStack> drops = new HashSet<>();
             drops.addAll(player.getInventory().main);

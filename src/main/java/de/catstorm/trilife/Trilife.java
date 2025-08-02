@@ -13,12 +13,15 @@ import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -26,8 +29,6 @@ import java.util.UUID;
 public class Trilife implements ModInitializer {
     public static final String MOD_ID = "trilife";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-    //TODO: make shit persist through restarts ffs
     protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
     public static final HashMap<UUID, Integer> playerLogoutZombies = new HashMap<>();
     public static final HashMap<UUID, Set<ItemStack>> zombieInventories = new HashMap<>();
@@ -65,12 +66,8 @@ public class Trilife implements ModInitializer {
         }
         if (player instanceof ServerPlayerEntity serverPlayer) {
             if (lives <= 0) serverPlayer.changeGameMode(GameMode.SPECTATOR);
-            else serverPlayer.changeGameMode(GameMode.SURVIVAL);
+            else serverPlayer.changeGameMode(GameMode.DEFAULT);
         }
-    }
-
-    public static boolean isPlayerOnline(String uuid, MinecraftServer server) {
-        return isPlayerOnline(UUID.fromString(uuid), server);
     }
 
     public static boolean isPlayerOnline(UUID uuid, MinecraftServer server) {

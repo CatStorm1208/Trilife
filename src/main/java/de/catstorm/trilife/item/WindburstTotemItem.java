@@ -7,6 +7,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -27,14 +29,18 @@ public class WindburstTotemItem extends TotemItem {
             MinecraftServer server = owner.getServer();
             assert server != null;
 
-            WindChargeEntity windCharge = EntityType.WIND_CHARGE.create(owner.getWorld());
-            assert windCharge != null;
-            windCharge.updatePosition(target.getX(), target.getY(), target.getZ());
-            windCharge.setVelocity(0, -10, 0);
-
-            owner.getWorld().spawnEntity(windCharge);
-            windCharge.setUuid(UUID.randomUUID());
-            owner.getWorld().spawnEntity(windCharge);
+            owner.getWorld().spawnEntity(generateCharge(owner.getWorld(), target.getPos()));
+            owner.getWorld().spawnEntity(generateCharge(owner.getWorld(), target.getPos()));
         }
+    }
+
+    public WindChargeEntity generateCharge(World world, Vec3d pos) {
+        WindChargeEntity windCharge = EntityType.WIND_CHARGE.create(world);
+        assert windCharge != null;
+        windCharge.updatePosition(pos.getX(), pos.getY(), pos.getZ());
+        windCharge.setVelocity(0, -10, 0);
+        windCharge.setUuid(UUID.randomUUID());
+
+        return windCharge;
     }
 }
