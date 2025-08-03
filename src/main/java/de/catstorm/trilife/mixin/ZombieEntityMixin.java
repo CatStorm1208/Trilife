@@ -15,7 +15,7 @@ import java.util.UUID;
 @Mixin(ZombieEntity.class)
 public class ZombieEntityMixin {
     @Unique private ZombieEntity THIS = (ZombieEntity) (Object) this;
-    @Unique private boolean doDiscard = false; //TEST
+    @Unique private boolean doDiscard = true; //TEST
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
