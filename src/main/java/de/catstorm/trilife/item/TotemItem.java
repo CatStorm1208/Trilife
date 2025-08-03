@@ -1,5 +1,6 @@
 package de.catstorm.trilife.item;
 
+import de.catstorm.trilife.Trilife;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -24,12 +25,6 @@ public class TotemItem extends Item {
         for (var effect : effects) {
             owner.addStatusEffect(effect);
         }
-        handleOnoAdvancement(owner);
-    }
-
-    protected void handleOnoAdvancement(LivingEntity owner) {
-        assert owner.getServer() != null;
-        owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
-            "advancement grant " + owner.getName().getString() + " only trilife:trilife/ono");
+        Trilife.grantAdvancement(owner, "ono");
     }
 }

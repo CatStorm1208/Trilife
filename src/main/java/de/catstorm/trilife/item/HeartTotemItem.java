@@ -2,6 +2,7 @@ package de.catstorm.trilife.item;
 
 import de.catstorm.trilife.PlayerData;
 import de.catstorm.trilife.StateSaverAndLoader;
+import de.catstorm.trilife.Trilife;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
@@ -20,13 +21,15 @@ public class HeartTotemItem extends TotemItem {
         playerState.lives += 1;
         var server = owner.getServer();
 
+        assert server != null;
         ServerPlayerEntity playerEntity = server.getPlayerManager().getPlayer(owner.getUuid());
         server.execute(() -> {
+            assert playerEntity != null;
             ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
         });
 
         assert owner.getServer() != null;
-        owner.getServer().getCommandManager().executeWithPrefix(owner.getServer().getCommandSource(),
-            "advancement grant " + owner.getName().getString() + " only trilife:trilife/cheater");
+
+        Trilife.grantAdvancement(owner, "cheater");
     }
 }

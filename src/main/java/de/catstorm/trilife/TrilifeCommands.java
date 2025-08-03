@@ -32,8 +32,7 @@ public class TrilifeCommands {
             item.set(TrilifeItems.LINKED_PLAYER_COMPONENT, player.getUuidAsString());
             player.getInventory().setStack(player.getInventory().selectedSlot, item);
 
-            context.getSource().getServer().getCommandManager().executeWithPrefix(context.getSource().getServer().getCommandSource(),
-                "advancement grant " + player.getName().getString() + " only trilife:trilife/contract");
+            Trilife.grantAdvancement(player, "contract");
             return 0;
         }
         player.sendMessage(Text.of("You are not holding an unlinked Linked Totem!"));
@@ -71,10 +70,8 @@ public class TrilifeCommands {
                 });
 
                 revived.updatePosition(executor.getX(), executor.getY(), executor.getZ());
-                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                    "advancement grant " + revived.getName().getString() + " only trilife:trilife/im_alive_is_nice");
-                server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-                    "advancement grant " + executor.getName().getString() + " only trilife:trilife/necromancer");
+                Trilife.grantAdvancement(revived, "im_alive_is_nice");
+                Trilife.grantAdvancement(executor, "necromancer");
 
                 item.decrement(1);
 
@@ -139,9 +136,9 @@ public class TrilifeCommands {
             server.execute(() -> ServerPlayNetworking.send(player, new PlayerLivesPayload(playerState.lives)));
 
             Trilife.evalLives(player, playerState.lives, server);
+
+            Trilife.grantAdvancement(player, "root");
         }
-        server.getCommandManager().executeWithPrefix(server.getCommandSource(),
-            "advancement grant @a only trilife:trilife/root");
 
         return 0;
     }

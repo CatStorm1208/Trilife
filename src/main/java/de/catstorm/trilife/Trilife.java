@@ -8,6 +8,8 @@ import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.advancement.AdvancementEntry;
+import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +67,18 @@ public class Trilife implements ModInitializer {
         if (player instanceof ServerPlayerEntity serverPlayer) {
             if (lives <= 0) serverPlayer.changeGameMode(GameMode.SPECTATOR);
             else serverPlayer.changeGameMode(GameMode.DEFAULT);
+        }
+    }
+
+    public static void grantAdvancement(LivingEntity player, String advancement) {
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            //Dodgy ahhhh code, but seems to work
+            assert serverPlayer.getServer() != null;
+            AdvancementEntry entry = serverPlayer.getServer().getAdvancementLoader().get(Identifier.of(MOD_ID, "trilife/" + advancement));
+            AdvancementProgress progress = serverPlayer.getAdvancementTracker().getProgress(entry);
+            if (!progress.isDone()) for (String s : progress.getUnobtainedCriteria()) {
+                serverPlayer.getAdvancementTracker().grantCriterion(entry, s);
+            }
         }
     }
 

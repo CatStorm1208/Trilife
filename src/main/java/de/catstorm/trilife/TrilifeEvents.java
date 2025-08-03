@@ -34,7 +34,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,12 +121,10 @@ public class TrilifeEvents {
                 assert entity.getServer() != null;
                 if (entity.getUuidAsString().equals("ff1337da-66b4-46af-bc1d-51714fb8f93d") ||
                     entity.getCommandTags().contains("trilife_pisstest")) {
-                    entity.getServer().getCommandManager().executeWithPrefix(entity.getServer().getCommandSource(),
-                        "advancement grant " + killer.getName().getString() + " only trilife:trilife/vecchios_saviour");
+                    Trilife.grantAdvancement(killer, "vecchios_saviour");
                 }
                 if (playerState.lives == 0) {
-                    entity.getServer().getCommandManager().executeWithPrefix(entity.getServer().getCommandSource(),
-                        "advancement grant " + killer.getName().getString() + " only trilife:trilife/the_end_is_never_the_end");
+                    Trilife.grantAdvancement(killer, "the_end_is_never_the_end");
                 }
             }
         }
