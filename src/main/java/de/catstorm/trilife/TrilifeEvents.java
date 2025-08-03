@@ -3,8 +3,10 @@ package de.catstorm.trilife;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.*;
+import de.catstorm.trilife.client.TrilifeClient;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
@@ -34,6 +36,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +47,10 @@ public class TrilifeEvents {
         LootTableEvents.MODIFY.register(TrilifeEvents::handleLootTableModify);
         ServerLivingEntityEvents.AFTER_DEATH.register(TrilifeEvents::handleLivingEntityAfterDeath);
         CommandRegistrationCallback.EVENT.register(TrilifeEvents::handleCommandRegistration);
+    }
+
+    public static void initClientEvents() {
+        HudRenderCallback.EVENT.register(TrilifeClient::render);
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
