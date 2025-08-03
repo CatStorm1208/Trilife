@@ -20,9 +20,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.world.GameMode;
 
 public class TrilifeCommands {
-    //NOTE: AdvancementCommand.java
     protected static int link(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         assert player != null;
@@ -139,6 +139,8 @@ public class TrilifeCommands {
 
             Trilife.grantAdvancement(player, "root");
         }
+
+        server.setDefaultGameMode(GameMode.SURVIVAL);
 
         return 0;
     }

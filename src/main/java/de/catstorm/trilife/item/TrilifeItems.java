@@ -1,6 +1,7 @@
 package de.catstorm.trilife.item;
 
 import com.mojang.serialization.Codec;
+import static de.catstorm.trilife.Trilife.MOD_ID;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
@@ -8,14 +9,10 @@ import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.*;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import static de.catstorm.trilife.Trilife.MOD_ID;
-
-import java.util.UUID;
 
 public class TrilifeItems {
     //Components

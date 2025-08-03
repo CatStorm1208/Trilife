@@ -58,9 +58,7 @@ public abstract class LivingEntityMixin {
 
             ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(THIS.getUuid());
             assert serverPlayer != null;
-            server.execute(() -> {
-                ServerPlayNetworking.send(serverPlayer, new PlayerLivesPayload(playerState.lives));
-            });
+            server.execute(() -> ServerPlayNetworking.send(serverPlayer, new PlayerLivesPayload(playerState.lives)));
 
             evalLives(THIS, playerState.lives, server);
 

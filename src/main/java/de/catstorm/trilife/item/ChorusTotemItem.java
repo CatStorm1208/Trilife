@@ -3,7 +3,6 @@ package de.catstorm.trilife.item;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import static de.catstorm.trilife.Trilife.LOGGER;
 import net.minecraft.text.Text;
 import net.minecraft.world.event.GameEvent;
 

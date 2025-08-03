@@ -49,6 +49,7 @@ public class DarkOrbEntity extends AbstractWindChargeEntity {
 
     @Override
     protected void createExplosion(Vec3d pos) {
+        bust(pos);
     }
 
     protected void bust(Vec3d pos) {
