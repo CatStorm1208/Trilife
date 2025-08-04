@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 
 @Mixin(DeathScreen.class)
-public class DeathScreenMixin {
+public abstract class DeathScreenMixin {
     @Unique private static long deathAnimationStartTime = 0;
     @Unique private static final int deathAnimationFrameCount = 21;
     @Unique private static final int deathAnimationFps = 20;

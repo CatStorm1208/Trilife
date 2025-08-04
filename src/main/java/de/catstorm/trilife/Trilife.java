@@ -3,7 +3,6 @@ package de.catstorm.trilife;
 import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
-import de.catstorm.trilife.records.PlayersAlivePayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.api.ModInitializer;
@@ -22,6 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -35,7 +35,6 @@ public class Trilife implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PayloadTypeRegistry.playS2C().register(PlayersAlivePayload.ID, PlayersAlivePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PlayerLivesPayload.ID, PlayerLivesPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
 

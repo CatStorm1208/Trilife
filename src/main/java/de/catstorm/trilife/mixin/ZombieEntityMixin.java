@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(ZombieEntity.class)
-public class ZombieEntityMixin {
+public abstract class ZombieEntityMixin {
     @Unique private ZombieEntity THIS = (ZombieEntity) (Object) this;
 
     @Inject(method = "tick", at = @At("TAIL"))

@@ -4,7 +4,6 @@ import static de.catstorm.trilife.Trilife.LOGGER;
 import static de.catstorm.trilife.Trilife.MOD_ID;
 import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.records.PlayerLivesPayload;
-import de.catstorm.trilife.records.PlayersAlivePayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -21,7 +20,6 @@ public class TrilifeClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(PlayersAlivePayload.ID, ClientPayloadHandler::handlePlayersAlivePayload);
         ClientPlayNetworking.registerGlobalReceiver(PlayerLivesPayload.ID, ClientPayloadHandler::handlePlayerLivesPayload);
         ClientPlayNetworking.registerGlobalReceiver(TotemFloatPayload.ID, ClientPayloadHandler::handleTotemFloatPayload);
 

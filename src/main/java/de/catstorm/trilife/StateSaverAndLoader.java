@@ -12,12 +12,10 @@ import java.util.UUID;
 import static de.catstorm.trilife.Trilife.MOD_ID;
 
 public class StateSaverAndLoader extends PersistentState {
-    public Integer totalPlayersAlive = 0;
     public HashMap<UUID, PlayerData> players = new HashMap<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        nbt.putInt("players_alive", totalPlayersAlive);
 
         NbtCompound playersNbt = new NbtCompound();
         players.forEach((uuid, playerData) -> {
@@ -36,7 +34,6 @@ public class StateSaverAndLoader extends PersistentState {
 
     public static StateSaverAndLoader createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         StateSaverAndLoader state = new StateSaverAndLoader();
-        state.totalPlayersAlive = tag.getInt("players_alive");
 
         NbtCompound playersNbt = tag.getCompound("players");
         playersNbt.getKeys().forEach(key -> {
@@ -55,7 +52,6 @@ public class StateSaverAndLoader extends PersistentState {
 
     public static StateSaverAndLoader createNew() {
         StateSaverAndLoader state = new StateSaverAndLoader();
-        state.totalPlayersAlive = 0;
         state.players = new HashMap<>();
         return state;
     }
@@ -76,9 +72,9 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     public static PlayerData getPlayerState(LivingEntity player) {
+        assert player.getWorld().getServer() != null;
         StateSaverAndLoader serverState = getServerState(player.getWorld().getServer());
-        PlayerData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
 
-        return playerState;
+        return serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
     }
 }

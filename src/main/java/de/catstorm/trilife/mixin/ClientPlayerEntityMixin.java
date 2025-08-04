@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public class ClientPlayerEntityMixin {
+public abstract class ClientPlayerEntityMixin {
     @Inject(method = "requestRespawn", at = @At("HEAD"))
     private void requestRespawn(CallbackInfo ci) {
         TrilifeClient.animationCanStart = true;
