@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "XXX",
+        "XXX",
+        "XXX"
+    ],
+    "key": {
+        "X": {
+            "item": "trilife:totinium_nugget"
+        }
+    },
+    "result": {
+        "id": "trilife:totinium_ingot",
+        "count": 1
+    },
+    "group": "stuff"
+}

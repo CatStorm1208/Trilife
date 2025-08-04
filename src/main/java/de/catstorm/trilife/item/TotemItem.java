@@ -21,10 +21,13 @@ public class TotemItem extends Item {
     public void onPop(DamageSource source, LivingEntity owner) {
         owner.setHealth(health);
         owner.clearStatusEffects();
-        owner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 5*20, 5, false, false, true));
+        boolean shouldApplyResistance = true;
         for (var effect : effects) {
             owner.addStatusEffect(effect);
+            if (effect.getEffectType().equals(StatusEffects.RESISTANCE)) shouldApplyResistance = false;
         }
+        if (shouldApplyResistance) owner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,
+            5*20, 5, false, false, true));
         Trilife.grantAdvancement(owner, "ono");
     }
 }

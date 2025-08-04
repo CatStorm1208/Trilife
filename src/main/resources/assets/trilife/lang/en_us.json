@@ -8,6 +8,11 @@
     "item.trilife.linkable_totem": "Linked Totem",
     "item.trilife.sneaky_totem": "Sneaky Totem",
     "item.trilife.windburst_totem": "Windburst Totem",
+    "item.trilife.loot_totem": "Loot Totem",
+    "item.trilife.bacon_totem": "Beacon Totem",
+    "item.trilife.regen_totem": "Regeneration Totem",
+    "item.trilife.backup_totem": "Backup Totem",
+    "item.trilife.immortal_totem": "Immortal Totem",
     "item.trilife.heart_cake": "Heart Cake",
     "item.trilife.light_iron_sword": "Iron Knife",
     "item.trilife.light_diamond_sword": "Diamond Knife",
@@ -15,6 +20,8 @@
     "item.trilife.soul_heart": "Soul Heart",
     "item.trilife.ender_orb": "Ender Orb",
     "item.trilife.dark_orb": "Dark Orb",
+    "item.trilife.totinium_ingot": "Totinium Ingot",
+    "item.trilife.totinium_nugget": "Totinium Nugget",
 
     "entity.trilife.dark_orb": "Dark Orb",
 

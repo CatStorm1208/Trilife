@@ -44,7 +44,7 @@ public class Trilife implements ModInitializer {
         TrilifeEntityTypes.initEntities();
         TrilifeSounds.initSounds();
 
-        LOGGER.info("Initialised Trilife!");
+        LOGGER.info("Initialised Trilife commons");
     }
 
     public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {

@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 
 public class TrilifeItems {
     //Components
-    //Could be moved to a TrilifeComponents class later
+    //NOTE: Could be moved to a TrilifeComponents class later
     public static final ComponentType<String> LINKED_PLAYER_COMPONENT = ComponentType.<String>builder().codec(Codec.STRING).build();
 
     //Totems
@@ -43,6 +43,11 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 1),
         new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1));
     public static final LootTotemItem LOOT_TOTEM = new LootTotemItem(new Item.Settings().maxCount(1), 1.0f);
+    public static final TotemItem REGEN_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
+        new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 2));
+    public static final ArmourTotemItem BACKUP_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 20.0f);
+    public static final TotemItem IMMORTAL_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
+        new StatusEffectInstance(StatusEffects.RESISTANCE, 10*20, 5, false, false, true));
 
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()
@@ -57,10 +62,13 @@ public class TrilifeItems {
     public static final EnderOrbItem ENDER_ORB = new EnderOrbItem(new Item.Settings().maxCount(1).maxDamage(32));
     public static final Item GENFROSTED = new Item(new Item.Settings().maxCount(1));
     public static final DarkOrbItem DARK_ORB = new DarkOrbItem(new Item.Settings().maxCount(16));
+    public static final Item TOTINIUM_INGOT = new Item(new Item.Settings().maxCount(64));
+    public static final Item TOTINIUM_NUGGET = new Item(new Item.Settings().maxCount(64));
 
     //Creative mode tab
     public static final ItemGroup TRILIFE_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(EMPTY_TOTEM))
         .displayName(Text.translatable("itemGroup.trilife.trilife_group")).entries(((displayContext, entries) -> {
+            //TODO: review order of items
             entries.add(EMPTY_TOTEM);
             entries.add(CHORUS_TOTEM);
             entries.add(HEART_TOTEM);
@@ -71,11 +79,16 @@ public class TrilifeItems {
             entries.add(LINKABLE_TOTEM);
             entries.add(BACON_TOTEM);
             entries.add(LOOT_TOTEM);
+            entries.add(REGEN_TOTEM);
+            entries.add(BACKUP_TOTEM);
+            entries.add(IMMORTAL_TOTEM);
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
             entries.add(ENDER_ORB);
             entries.add(DARK_ORB);
+            entries.add(TOTINIUM_NUGGET);
+            entries.add(TOTINIUM_INGOT);
 
             entries.add(LIGHT_IRON_SWORD);
             entries.add(LIGHT_DIAMOND_SWORD);
@@ -104,6 +117,11 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "dark_orb"), DARK_ORB);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "bacon_totem"), BACON_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "loot_totem"), LOOT_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "regen_totem"), REGEN_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "backup_totem"), BACKUP_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "immortal_totem"), IMMORTAL_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_ingot"), TOTINIUM_INGOT);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_nugget"), TOTINIUM_NUGGET);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }

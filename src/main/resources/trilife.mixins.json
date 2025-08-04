@@ -13,7 +13,8 @@
     ],
     "client": [
         "EntityRendererMixin",
-        "GameRendererMixin"
+        "GameRendererMixin",
+        "InGameHudMixin"
     ],
     "injectors": {
         "defaultRequire": 1
