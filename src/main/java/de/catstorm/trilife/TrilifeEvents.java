@@ -97,12 +97,12 @@ public class TrilifeEvents {
         }
         else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/pillager]")) {
             LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.TOTINIUM_NUGGET))
-                .conditionally(RandomChanceLootCondition.builder(0.2f).build());
+                .conditionally(RandomChanceLootCondition.builder(0.02f).build());
             tableBuilder.pool(poolBuilder);
         }
         else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/vindicator]")) {
             LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.TOTINIUM_NUGGET))
-                .conditionally(RandomChanceLootCondition.builder(0.5f).build());
+                .conditionally(RandomChanceLootCondition.builder(0.05f).build());
             tableBuilder.pool(poolBuilder);
         }
         else if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:chests/ancient_city_ice_box]")) {

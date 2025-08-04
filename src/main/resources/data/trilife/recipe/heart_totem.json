@@ -7,16 +7,16 @@
     ],
     "key": {
         "#": {
-            "item": "minecraft:ancient_debris"
+            "item": "minecraft:netherite_ingot"
         },
         "G": {
             "item": "minecraft:golden_apple"
         },
         "E": {
-            "item": "minecraft:emerald_block"
+            "item": "trilife:totinium_ingot"
         },
         "T": {
-            "item": "trilife:empty_totem"
+            "item": "trilife:regen_totem"
         }
     },
     "result": {

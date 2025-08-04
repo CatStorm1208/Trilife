@@ -1,23 +1,20 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "N#N",
+        " # ",
         "#T#",
-        "N#N"
+        " # "
     ],
     "key": {
         "#": {
             "item": "minecraft:glistering_melon_slice"
         },
         "T": {
-            "item": "trilife:regen_totem"
-        },
-        "N": {
-            "item": "trilife:totinium_nugget"
+            "item": "trilife:empty_totem"
         }
     },
     "result": {
-        "id": "trilife:health_totem",
+        "id": "trilife:regen_totem",
         "count": 1
     },
     "group": "stuff"

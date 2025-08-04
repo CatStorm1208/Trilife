@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "trilife:totinium_ingot"
+        },
+        {
+            "item": "trilife:armour_totem"
+        },
+        {
+            "item": "trilife:health_totem"
+        }
+    ],
+    "result": {
+        "id": "trilife:backup_totem",
+        "count": 1
+    },
+    "group": "stuff"
+}
