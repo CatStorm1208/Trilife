@@ -1,7 +1,7 @@
 package de.catstorm.trilife.client;
 
-import static de.catstorm.trilife.Trilife.MOD_ID;
 import static de.catstorm.trilife.Trilife.LOGGER;
+import static de.catstorm.trilife.Trilife.MOD_ID;
 import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.PlayersAlivePayload;
@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 public class TrilifeClient implements ClientModInitializer {
     public static int lives = 0;
     public static final EntityModelLayer DARK_ORB_LAYER = new EntityModelLayer(Identifier.of(MOD_ID, "dark_orb"), "main");
+    public static boolean animationCanStart = true;
 
     @Override
     public void onInitializeClient() {

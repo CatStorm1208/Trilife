@@ -12,6 +12,8 @@
         "ZombieEntityMixin"
     ],
     "client": [
+        "ClientPlayerEntityMixin",
+        "DeathScreenMixin",
         "EntityRendererMixin",
         "GameRendererMixin",
         "InGameHudMixin"

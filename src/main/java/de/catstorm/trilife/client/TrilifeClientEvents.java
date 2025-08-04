@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
@@ -17,8 +18,9 @@ public class TrilifeClientEvents {
     }
 
     public static void render(DrawContext context, RenderTickCounter tickCounter) {
-        assert MinecraftClient.getInstance().player != null;
-        if (MinecraftClient.getInstance().player.isCreative()) return;
+        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        assert player != null;
+        if (player.isCreative()) return;
 
         int x = (context.getScaledWindowWidth() / 2) - 5;
         int y = context.getScaledWindowHeight() - 45;

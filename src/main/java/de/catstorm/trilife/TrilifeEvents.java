@@ -90,7 +90,6 @@ public class TrilifeEvents {
 
     private static void handleLootTableModify(RegistryKey<LootTable> key, LootTable.Builder tableBuilder,
                                               LootTableSource source, RegistryWrapper.WrapperLookup registries) {
-        LOGGER.info(key.toString());
         if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) { //I really hope no one will question me
             LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.EMPTY_TOTEM));
             tableBuilder.pool(poolBuilder);
