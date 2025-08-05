@@ -48,6 +48,7 @@ public class TrilifeItems {
     public static final ArmourTotemItem BACKUP_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 20.0f);
     public static final TotemItem IMMORTAL_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.RESISTANCE, 10*20, 5, false, false, true));
+    public static final VaultTotemItem VAULT_TOTEM = new VaultTotemItem(new Item.Settings().maxCount(1), 1.0f);
 
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()
@@ -82,6 +83,7 @@ public class TrilifeItems {
             entries.add(REGEN_TOTEM);
             entries.add(BACKUP_TOTEM);
             entries.add(IMMORTAL_TOTEM);
+            entries.add(VAULT_TOTEM);
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
@@ -122,6 +124,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "immortal_totem"), IMMORTAL_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_ingot"), TOTINIUM_INGOT);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_nugget"), TOTINIUM_NUGGET);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "vault_totem"), VAULT_TOTEM);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }

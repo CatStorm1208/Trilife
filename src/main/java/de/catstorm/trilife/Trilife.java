@@ -1,5 +1,7 @@
 package de.catstorm.trilife;
 
+import de.catstorm.trilife.block.TrilifeBlocks;
+import de.catstorm.trilife.block.blockEntity.TrilifeBlockEntityTypes;
 import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
@@ -40,6 +42,8 @@ public class Trilife implements ModInitializer {
 
         TrilifeEvents.initEvents();
         TrilifeItems.initItems();
+        TrilifeBlocks.initBlocks();
+        TrilifeBlockEntityTypes.initBlockEntities();
         TrilifeEntityTypes.initEntities();
         TrilifeSounds.initSounds();
 

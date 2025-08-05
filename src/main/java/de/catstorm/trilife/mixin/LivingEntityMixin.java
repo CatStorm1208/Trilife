@@ -101,6 +101,11 @@ public abstract class LivingEntityMixin {
                     item.decrement(1);
                     cir.setReturnValue(false);
                 }
+                else if (item.isOf(TrilifeItems.VAULT_TOTEM)) {
+                    totem.onPop(source, THIS);
+                    item.decrement(1);
+                    cir.setReturnValue(false);
+                }
                 else if (item.getItem() instanceof LinkedTotemItem) {
                     @SuppressWarnings("DataFlowIssue") //lololololololol
                     UUID linkUUID = UUID.fromString(item.get(TrilifeItems.LINKED_PLAYER_COMPONENT));
