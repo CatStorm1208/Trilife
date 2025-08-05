@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "trilife:block/totem_vault"
+        }
+    }
+}

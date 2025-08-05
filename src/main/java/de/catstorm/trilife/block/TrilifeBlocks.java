@@ -10,8 +10,9 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public class TrilifeBlocks {
-    public static final TotemVaultBlock TOTEM_VAULT = new TotemVaultBlock(AbstractBlock.Settings.create()
-        .mapColor(MapColor.OAK_TAN).instrument(NoteBlockInstrument.BASS).strength(2.5f).sounds(BlockSoundGroup.WOOD));
+    public static final TotemVaultBlock TOTEM_VAULT = new TotemVaultBlock(AbstractBlock.Settings.create().nonOpaque()
+        .mapColor(MapColor.OAK_TAN).instrument(NoteBlockInstrument.BASS).strength(-1.0f, 3600000.0f)
+        .sounds(BlockSoundGroup.VAULT));
 
     public static void initBlocks() {
         Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "totem_vault"), TOTEM_VAULT);

@@ -2,6 +2,7 @@ package de.catstorm.trilife.block;
 
 import com.mojang.serialization.MapCodec;
 import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
@@ -47,5 +48,10 @@ public class TotemVaultBlock extends BlockWithEntity {
             world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
         return ActionResult.CONSUME;
+    }
+
+    @Override
+    protected BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 }
