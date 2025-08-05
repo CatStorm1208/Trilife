@@ -2,6 +2,8 @@ package de.catstorm.trilife.item;
 
 import com.mojang.serialization.Codec;
 import static de.catstorm.trilife.Trilife.MOD_ID;
+import de.catstorm.trilife.block.TrilifeBlocks;
+import de.catstorm.trilife.item.totem.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
@@ -65,6 +67,7 @@ public class TrilifeItems {
     public static final DarkOrbItem DARK_ORB = new DarkOrbItem(new Item.Settings().maxCount(16));
     public static final Item TOTINIUM_INGOT = new Item(new Item.Settings().maxCount(64));
     public static final Item TOTINIUM_NUGGET = new Item(new Item.Settings().maxCount(64));
+    public static final BlockItem TOTINIUM_BLOCK = new BlockItem(TrilifeBlocks.TOTINIUM_BLOCK, new Item.Settings().maxCount(64));
 
     //Creative mode tab
     public static final ItemGroup TRILIFE_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(EMPTY_TOTEM))
@@ -91,6 +94,7 @@ public class TrilifeItems {
             entries.add(DARK_ORB);
             entries.add(TOTINIUM_NUGGET);
             entries.add(TOTINIUM_INGOT);
+            entries.add(TOTINIUM_BLOCK);
 
             entries.add(LIGHT_IRON_SWORD);
             entries.add(LIGHT_DIAMOND_SWORD);
@@ -125,6 +129,7 @@ public class TrilifeItems {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_ingot"), TOTINIUM_INGOT);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_nugget"), TOTINIUM_NUGGET);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "vault_totem"), VAULT_TOTEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "totinium_block"), TOTINIUM_BLOCK);
 
         Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "trilife_group"), TRILIFE_GROUP);
     }

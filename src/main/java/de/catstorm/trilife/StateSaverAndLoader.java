@@ -16,7 +16,6 @@ public class StateSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-
         NbtCompound playersNbt = new NbtCompound();
         players.forEach((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();

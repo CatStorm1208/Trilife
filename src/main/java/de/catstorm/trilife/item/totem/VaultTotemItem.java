@@ -1,9 +1,11 @@
-package de.catstorm.trilife.item;
+package de.catstorm.trilife.item.totem;
 
 import de.catstorm.trilife.block.TrilifeBlocks;
 import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
+import de.catstorm.trilife.item.TrilifeItems;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -45,13 +47,16 @@ public class VaultTotemItem extends TotemItem {
 
             BlockState vault = TrilifeBlocks.TOTEM_VAULT.getDefaultState();
             serverWorld.setBlockState(pos, vault);
+            TotemVaultBlockEntity blockEntity = ((TotemVaultBlockEntity)
+                Objects.requireNonNull(serverWorld.getBlockEntity(pos)));
 
             //Spaghetti coding at its finest
             if (owner instanceof PlayerEntity player) for (int i = 0; i < player.getInventory().size(); i++) {
                 if (player.getInventory().getStack(i).isOf(TrilifeItems.VAULT_TOTEM)) continue;
-                ((TotemVaultBlockEntity) Objects.requireNonNull(serverWorld.getBlockEntity(pos)))
-                    .setStack(i, player.getInventory().getStack(i));
+                blockEntity.setStack(i, player.getInventory().getStack(i));
             }
+            blockEntity.setComponents(ComponentMap.builder()
+                .add(TrilifeItems.LINKED_PLAYER_COMPONENT, owner.getUuidAsString()).build());
             ((PlayerEntity) owner).getInventory().clear();
         }
     }

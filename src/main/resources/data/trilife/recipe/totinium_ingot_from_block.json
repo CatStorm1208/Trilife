@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "trilife:totinium_block"
+        }
+    ],
+    "result": {
+        "id": "trilife:totinium_ingot",
+        "count": 9
+    },
+    "group": "stuff"
+}

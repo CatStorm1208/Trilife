@@ -1,6 +1,6 @@
 package de.catstorm.trilife.client;
 
-import de.catstorm.trilife.item.TotemItem;
+import de.catstorm.trilife.item.totem.TotemItem;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;

@@ -2,12 +2,14 @@ package de.catstorm.trilife.block;
 
 import com.mojang.serialization.MapCodec;
 import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
+import de.catstorm.trilife.item.TrilifeItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -37,13 +39,24 @@ public class TotemVaultBlock extends BlockWithEntity {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
+
         BlockEntity blockEntity = world.getBlockEntity(pos);
+        assert blockEntity != null;
+
+        String linkedPlayer = blockEntity.getComponents().get(TrilifeItems.LINKED_PLAYER_COMPONENT);
+        if (linkedPlayer == null) {
+            player.sendMessage(Text.of("For unknown reasons, this vault is invalid and thus unusable."));
+            return ActionResult.FAIL;
+        }
+        if (!linkedPlayer.equals(player.getUuidAsString())) {
+            player.sendMessage(Text.of("This vault does not belong to you!"), true);
+            return ActionResult.FAIL;
+        }
         if (blockEntity instanceof TotemVaultBlockEntity totemVaultBlockEntity) {
             for (int i = 0; i < 41; i++) {
-                if (player.getInventory().getStack(i).isEmpty()) {
-                    player.getInventory().setStack(i, totemVaultBlockEntity.getStack(i));
-                }
-                else player.dropItem(totemVaultBlockEntity.getStack(i), true, false);
+                //NOTE: maybe inverse these?
+                player.dropItem(totemVaultBlockEntity.getStack(i), true, false);
+                player.getInventory().setStack(i, totemVaultBlockEntity.getStack(i));
             }
             world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }

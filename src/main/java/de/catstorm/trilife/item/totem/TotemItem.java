@@ -1,4 +1,4 @@
-package de.catstorm.trilife.item;
+package de.catstorm.trilife.item.totem;
 
 import de.catstorm.trilife.Trilife;
 import net.minecraft.entity.LivingEntity;
