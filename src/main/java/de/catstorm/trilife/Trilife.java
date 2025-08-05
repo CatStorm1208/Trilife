@@ -31,7 +31,7 @@ import java.util.UUID;
 public class Trilife implements ModInitializer {
     public static final String MOD_ID = "trilife";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
+    @Deprecated protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
     public static final HashMap<UUID, Integer> playerLogoutZombies = new HashMap<>();
     public static final HashMap<UUID, Set<ItemStack>> zombieInventories = new HashMap<>();
 
@@ -92,11 +92,12 @@ public class Trilife implements ModInitializer {
         return false;
     }
 
-    public static void queuePlayerLivesChange(PlayerEntity player, int change) {
-        queuePlayerLivesChange(player.getUuid(), change);
+    public static void queuePlayerLivesChange(PlayerEntity player, int change, MinecraftServer server) {
+        queuePlayerLivesChange(player.getUuid(), change, server);
     }
 
-    public static void queuePlayerLivesChange(UUID uuid, int change) {
-        playerLivesQueue.put(uuid, playerLivesQueue.getOrDefault(uuid, 0) + change);
+    public static void queuePlayerLivesChange(UUID uuid, int change, MinecraftServer server) {
+        StateSaverAndLoader state = StateSaverAndLoader.getServerState(server);
+        state.playerLivesQueue.put(uuid, state.playerLivesQueue.getOrDefault(uuid, 0) + change);
     }
 }

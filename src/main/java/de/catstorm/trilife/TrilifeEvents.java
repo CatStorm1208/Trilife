@@ -35,6 +35,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,18 +49,19 @@ public class TrilifeEvents {
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        //TODO: discard zombie on player join
+        //TODO?: discard zombie on player join
         PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
-        if (playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
+        StateSaverAndLoader state = StateSaverAndLoader.getServerState(server);
+        if (state.playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
             final int livesBefore = playerState.lives;
-            playerState.lives += playerLivesQueue.get(handler.getPlayer().getUuid());
+            playerState.lives += state.playerLivesQueue.get(handler.getPlayer().getUuid());
             if (livesBefore > playerState.lives) {
                 var pos = handler.getPlayer().getRespawnTarget(false, TeleportTarget.NO_OP).pos();
                 handler.getPlayer().setPos(pos.getX(), pos.getY(), pos.getZ());
                 handler.getPlayer().getInventory().clear();
                 handler.getPlayer().sendMessage(Text.of("You were killed whilst being logged out. A life has been deducted!"));
             }
-            playerLivesQueue.remove(handler.getPlayer().getUuid());
+            state.playerLivesQueue.remove(handler.getPlayer().getUuid());
         }
 
         server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));

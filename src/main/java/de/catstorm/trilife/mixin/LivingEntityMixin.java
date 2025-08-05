@@ -80,7 +80,7 @@ public abstract class LivingEntityMixin {
                 THIS.dropStack(stack);
             }
             zombieInventories.remove(uuid);
-            queuePlayerLivesChange(uuid, -1);
+            queuePlayerLivesChange(uuid, -1, THIS.getServer());
             break;
         }
     }
@@ -126,7 +126,7 @@ public abstract class LivingEntityMixin {
 
                             THIS.getServer().execute(() -> ServerPlayNetworking.send(link, new PlayerLivesPayload(linkState.lives)));
                         }
-                        else Trilife.queuePlayerLivesChange(link, -1);
+                        else Trilife.queuePlayerLivesChange(link, -1, THIS.getServer());
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
