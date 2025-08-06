@@ -21,8 +21,4 @@ public abstract class GameRendererMixin {
             ci.cancel();
         }
     }
-
-    @Inject(method = "renderFloatingItem", at = @At("HEAD"))
-    private void renderFloatingItem(DrawContext context, float tickDelta, CallbackInfo ci) {
-    }
 }

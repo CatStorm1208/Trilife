@@ -24,7 +24,6 @@ public class StateSaverAndLoader extends PersistentState {
 
             playerNbt.putInt("player_lives", playerData.lives);
             playerNbt.putInt("totem_popup", playerData.useless);
-            playerNbt.putString("link_players", playerData.link);
 
             playersNbt.put(uuid.toString(), playerNbt);
         });
@@ -52,7 +51,6 @@ public class StateSaverAndLoader extends PersistentState {
 
             playerData.lives = playersNbt.getCompound(key).getInt("player_lives");
             playerData.useless = playersNbt.getCompound(key).getInt("totem_popup");
-            playerData.link = playersNbt.getCompound(key).getString("link_players");
 
             UUID uuid = UUID.fromString(key);
             state.players.put(uuid, playerData);
