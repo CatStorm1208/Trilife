@@ -3,10 +3,12 @@ package de.catstorm.trilife;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.*;
+import de.catstorm.trilife.discord.DiscordBridge;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -46,6 +48,11 @@ public class TrilifeEvents {
         LootTableEvents.MODIFY.register(TrilifeEvents::handleLootTableModify);
         ServerLivingEntityEvents.AFTER_DEATH.register(TrilifeEvents::handleLivingEntityAfterDeath);
         CommandRegistrationCallback.EVENT.register(TrilifeEvents::handleCommandRegistration);
+        ServerLifecycleEvents.SERVER_STARTED.register(TrilifeEvents::handleServerStarted);
+    }
+
+    private static void handleServerStarted(MinecraftServer server) {
+        DiscordBridge.initDiscord(server);
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

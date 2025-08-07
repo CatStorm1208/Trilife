@@ -14,6 +14,7 @@ import static de.catstorm.trilife.Trilife.MOD_ID;
 public class StateSaverAndLoader extends PersistentState {
     public HashMap<UUID, PlayerData> players = new HashMap<>();
     public HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
+    public String token = "";
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
@@ -38,6 +39,7 @@ public class StateSaverAndLoader extends PersistentState {
             livesQueueNbt.put(uuid.toString(), queueEntryNbt);
         });
         nbt.put("player_lives_queue", livesQueueNbt);
+        nbt.putString("token", token);
 
         return nbt;
     }
@@ -60,6 +62,8 @@ public class StateSaverAndLoader extends PersistentState {
         livesQueueNbt.getKeys().forEach(key -> state.playerLivesQueue.put(UUID.fromString(key),
             livesQueueNbt.getCompound(key).getInt("change")));
 
+        state.token = tag.getString("token");
+
         return state;
     }
 
@@ -67,6 +71,7 @@ public class StateSaverAndLoader extends PersistentState {
         StateSaverAndLoader state = new StateSaverAndLoader();
         state.players = new HashMap<>();
         state.playerLivesQueue = new HashMap<>();
+        state.token = "";
         return state;
     }
 

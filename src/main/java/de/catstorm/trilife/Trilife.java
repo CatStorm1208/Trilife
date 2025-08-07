@@ -31,7 +31,6 @@ import java.util.UUID;
 public class Trilife implements ModInitializer {
     public static final String MOD_ID = "trilife";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    @Deprecated protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
     public static final HashMap<UUID, Integer> playerLogoutZombies = new HashMap<>();
     public static final HashMap<UUID, Set<ItemStack>> zombieInventories = new HashMap<>();
 
