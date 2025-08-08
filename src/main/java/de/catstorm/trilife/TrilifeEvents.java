@@ -147,8 +147,8 @@ public class TrilifeEvents {
                                                   CommandRegistryAccess registryAccess,
                                                   CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("trilife")
-            .then(CommandManager.literal("link")
-                .executes(TrilifeCommands::link))
+            /*.then(CommandManager.literal("link")
+                .executes(TrilifeCommands::link))*/
             .then(CommandManager.literal("revive")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::revive)))

@@ -23,6 +23,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
 
 public class TrilifeCommands {
+    @Deprecated
     protected static int link(CommandContext<ServerCommandSource> context) {
         ServerPlayerEntity player = context.getSource().getPlayer();
         assert player != null;

@@ -33,7 +33,7 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
     public static final WindburstTotemItem WINDBURST_TOTEM = new WindburstTotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
-    public static final Item LINKABLE_TOTEM = new Item(new Item.Settings().maxCount(1));
+    public static final LinkableTotemItem LINKABLE_TOTEM = new LinkableTotemItem(new Item.Settings().maxCount(1));
     public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1)
         .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
         .component(LINKED_PLAYER_COMPONENT, ""), 1.0f,
