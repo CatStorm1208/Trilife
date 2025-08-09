@@ -22,7 +22,8 @@ public class TotemItem extends Item {
         owner.setHealth(health);
         owner.clearStatusEffects();
         boolean shouldApplyResistance = true;
-        for (var effect : effects) {
+        for (var instance : effects) {
+            var effect = new StatusEffectInstance(instance);
             owner.addStatusEffect(effect);
             if (effect.getEffectType().equals(StatusEffects.RESISTANCE)) shouldApplyResistance = false;
         }

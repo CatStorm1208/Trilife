@@ -26,7 +26,7 @@ public class TrilifeItems {
     public static final ChorusTotemItem CHORUS_TOTEM = new ChorusTotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final HeartTotemItem HEART_TOTEM = new HeartTotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final TotemItem SNEAKY_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.INVISIBILITY, 10*20, 0, false, false, true),
+        new StatusEffectInstance(StatusEffects.INVISIBILITY, 10*20, 5, false, false, true),
         new StatusEffectInstance(StatusEffects.SPEED, 10*20, 2, false, false, true));
     public static final TotemItem HEALTH_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 20.0f);
     public static final ArmourTotemItem ARMOUR_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 1.0f,
