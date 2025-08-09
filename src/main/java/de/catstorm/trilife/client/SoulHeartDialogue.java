@@ -1,13 +1,12 @@
 package de.catstorm.trilife.client;
 
-import de.catstorm.trilife.logic.AlternatingInt;
+import de.catstorm.trilife.logic.AlternatingValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +17,7 @@ public class SoulHeartDialogue extends Screen {
     }
 
     public Set<ButtonWidget> buttons = new HashSet<>();
-    private final AlternatingInt alternatingX = new AlternatingInt(-205, 5);
+    private final AlternatingValue<Integer> alternatingX = new AlternatingValue<>(-205, 5);
 
     @Override
     protected void init() {
@@ -47,9 +46,7 @@ public class SoulHeartDialogue extends Screen {
     }
 
     private boolean buttonsContainPlayerName(String name) {
-        for (var button : buttons) {
-            if (button.getMessage().getString().equals(name)) return true;
-        }
+        for (var button : buttons) if (button.getMessage().getString().equals(name)) return true;
         return false;
     }
 

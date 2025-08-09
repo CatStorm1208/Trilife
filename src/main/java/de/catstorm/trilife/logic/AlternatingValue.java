@@ -1,24 +1,23 @@
 package de.catstorm.trilife.logic;
 
-public class AlternatingInt {
-    private final int value1;
-    private final int value2;
+public class AlternatingValue<T> {
+    private final T value1;
+    private final T value2;
     private boolean shift = false;
 
-    public AlternatingInt(int value1, int value2) {
+    public AlternatingValue(T value1, T value2) {
         this.value1 = value1;
         this.value2 = value2;
     }
 
-    public int get() {
+    public T get() {
         return shift ? value2 : value1;
     }
 
-    public int next() {
-        int result = get();
+    public T next() {
         skip();
 
-        return result;
+        return shift ? value1 : value2;
     }
 
     public void skip() {
