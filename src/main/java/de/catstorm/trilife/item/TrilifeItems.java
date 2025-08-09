@@ -55,7 +55,7 @@ public class TrilifeItems {
     //Other
     public static final Item HEART_CAKE = new Item(new Item.Settings().food(new FoodComponent.Builder()
         .nutrition(0).saturationModifier(0).alwaysEdible().build()));
-    public static final Item SOUL_HEART = new Item(new Item.Settings().maxCount(1));
+    public static final SoulHeartItem SOUL_HEART = new SoulHeartItem(new Item.Settings().maxCount(1));
     public static final SwordItem LIGHT_IRON_SWORD = new SwordItem(ToolMaterials.IRON, new Item.Settings()
         .attributeModifiers(SwordItem.createAttributeModifiers(ToolMaterials.IRON, -2, 0.5f)));
     public static final SwordItem LIGHT_DIAMOND_SWORD = new SwordItem(ToolMaterials.DIAMOND, new Item.Settings()

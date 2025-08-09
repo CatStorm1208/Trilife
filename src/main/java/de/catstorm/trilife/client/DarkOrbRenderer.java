@@ -1,5 +1,7 @@
 package de.catstorm.trilife.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -14,6 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import static de.catstorm.trilife.Trilife.MOD_ID;
 
+@Environment(EnvType.CLIENT)
 public class DarkOrbRenderer extends EntityRenderer<AbstractWindChargeEntity> {
     private static final float field_52258 = MathHelper.square(3.5F);
     private static final Identifier TEXTURE = Identifier.of(MOD_ID, "textures/entity/dark_orb.png");

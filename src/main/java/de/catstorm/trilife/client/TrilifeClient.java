@@ -7,6 +7,8 @@ import de.catstorm.trilife.entity.TrilifeEntityTypes;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -16,6 +18,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.WindChargeEntityModel;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class TrilifeClient implements ClientModInitializer {
     public static int lives = 0;
     public static final EntityModelLayer DARK_ORB_LAYER = new EntityModelLayer(Identifier.of(MOD_ID, "dark_orb"), "main");

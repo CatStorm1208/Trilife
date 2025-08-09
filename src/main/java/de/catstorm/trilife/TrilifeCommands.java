@@ -9,7 +9,6 @@ import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ServerScoreboard;
@@ -24,22 +23,6 @@ import net.minecraft.world.GameMode;
 
 public class TrilifeCommands {
     @Deprecated
-    protected static int link(CommandContext<ServerCommandSource> context) {
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        assert player != null;
-        var item = player.getInventory().main.get(player.getInventory().selectedSlot);
-        if (item.isOf(TrilifeItems.LINKABLE_TOTEM)) {
-            item = new ItemStack(TrilifeItems.LINKED_TOTEM);
-            item.set(TrilifeItems.LINKED_PLAYER_COMPONENT, player.getUuidAsString());
-            player.getInventory().setStack(player.getInventory().selectedSlot, item);
-
-            Trilife.grantAdvancement(player, "contract");
-            return 0;
-        }
-        player.sendMessage(Text.of("You are not holding an unlinked Linked Totem!"));
-        return 1;
-    }
-
     protected static int revive(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         assert context.getSource().getPlayer() != null;
         for (var item : context.getSource().getPlayer().getHandItems()) {

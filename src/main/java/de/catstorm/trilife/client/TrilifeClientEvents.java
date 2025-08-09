@@ -1,6 +1,8 @@
 package de.catstorm.trilife.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -8,6 +10,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class TrilifeClientEvents {
     private static final Identifier EMPTY_HEART = Identifier.ofVanilla("hud/heart/container");
     private static final Identifier FILLED_HEART = Identifier.of("minecraft", "hud/heart/frozen_full"); //TODO: replace this
