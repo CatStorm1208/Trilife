@@ -10,16 +10,20 @@ import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
+
+import java.util.EnumSet;
 
 public class TrilifeCommands {
     @Deprecated
@@ -53,7 +57,8 @@ public class TrilifeCommands {
                     ServerPlayNetworking.send(executor, new PlayerLivesPayload(executorState.lives));
                 });
 
-                revived.updatePosition(executor.getX(), executor.getY(), executor.getZ());
+                revived.teleport((ServerWorld) revived.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
+                    EnumSet.noneOf(PositionFlag.class), executor.getYaw(), executor.getPitch());
                 Trilife.grantAdvancement(revived, "im_alive_is_nice");
                 Trilife.grantAdvancement(executor, "necromancer");
 

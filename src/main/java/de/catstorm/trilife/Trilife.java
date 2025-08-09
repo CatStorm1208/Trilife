@@ -51,25 +51,32 @@ public class Trilife implements ModInitializer {
     }
 
     public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {
-        ServerScoreboard scoreboard = server.getScoreboard();
-        assert scoreboard != null;
-        switch (lives) {
-            case 0 -> {
-                scoreboard.clearTeam(player.getNameForScoreboard());
+        try {
+            ServerScoreboard scoreboard = server.getScoreboard();
+            assert scoreboard != null;
+            switch (lives) {
+                case 0 -> {
+                    scoreboard.clearTeam(player.getNameForScoreboard());
 
-                LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(player.getWorld());
-                assert lightning != null;
-                lightning.updatePosition(player.getX(), player.getY(), player.getZ());
-                player.getWorld().spawnEntity(lightning);
+                    LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(player.getWorld());
+                    assert lightning != null;
+                    lightning.updatePosition(player.getX(), player.getY(), player.getZ());
+                    player.getWorld().spawnEntity(lightning);
+                }
+                case 1 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("reds"));
+                case 2 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("yellows"));
+                case 3 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("greens"));
+                case 4 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("blues"));
             }
-            case 1 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("reds"));
-            case 2 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("yellows"));
-            case 3 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("greens"));
-            case 4 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("blues"));
+            if (player instanceof ServerPlayerEntity serverPlayer) {
+                if (lives <= 0) serverPlayer.changeGameMode(GameMode.SPECTATOR);
+                else serverPlayer.changeGameMode(GameMode.DEFAULT);
+            }
         }
-        if (player instanceof ServerPlayerEntity serverPlayer) {
-            if (lives <= 0) serverPlayer.changeGameMode(GameMode.SPECTATOR);
-            else serverPlayer.changeGameMode(GameMode.DEFAULT);
+        catch (Exception e) {
+            LOGGER.error("An error occurred whilst evaluating lives. If you just created this world, this can be ignored.");
+            //noinspection CallToPrintStackTrace
+            e.printStackTrace();
         }
     }
 

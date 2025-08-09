@@ -9,12 +9,13 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
+import static de.catstorm.trilife.Trilife.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class TrilifeClientEvents {
     private static final Identifier EMPTY_HEART = Identifier.ofVanilla("hud/heart/container");
-    private static final Identifier FILLED_HEART = Identifier.of("minecraft", "hud/heart/frozen_full"); //TODO: replace this
-    private static final Identifier FOURTH_HEART = Identifier.of("minecraft", "hud/heart/poisoned_full"); //TODO: and this
+    private static final Identifier FILLED_HEART = Identifier.of(MOD_ID, "heart/full_heart");
+    private static final Identifier FOURTH_HEART = Identifier.of(MOD_ID, "heart/overheart");
 
     public static void initClientEvents() {
         HudRenderCallback.EVENT.register(TrilifeClientEvents::render);

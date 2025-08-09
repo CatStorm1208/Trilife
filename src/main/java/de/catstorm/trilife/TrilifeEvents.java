@@ -38,6 +38,7 @@ import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class TrilifeEvents {
     public static void initEvents() {
@@ -77,8 +78,9 @@ public class TrilifeEvents {
         zombie.addCommandTag("ghost_" + player.getUuidAsString());
         zombie.setAiDisabled(true);
         zombie.setCustomName(Text.of(player.getNameForScoreboard()));
+        zombie.setUuid(UUID.randomUUID());
         if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnEntity(zombie);
+            serverWorld.tryLoadEntity(zombie);
         }
 
         playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //NOTE: 3600*20
