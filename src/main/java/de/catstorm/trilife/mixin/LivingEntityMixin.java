@@ -116,17 +116,17 @@ public abstract class LivingEntityMixin {
                         cir.setReturnValue(true);
                         totem.onPop(source, THIS);
                         assert THIS.getServer() != null;
-                        ServerPlayerEntity link = THIS.getServer().getPlayerManager().getPlayer(linkUUID);
-                        assert link != null;
 
                         if (isPlayerOnline(linkUUID, THIS.getServer())) {
+                            ServerPlayerEntity link = THIS.getServer().getPlayerManager().getPlayer(linkUUID);
+                            assert link != null;
                             PlayerData linkState = StateSaverAndLoader.getPlayerState(link);
                             linkState.lives -= 1;
                             Trilife.evalLives(link, linkState.lives, THIS.getServer());
 
                             THIS.getServer().execute(() -> ServerPlayNetworking.send(link, new PlayerLivesPayload(linkState.lives)));
                         }
-                        else Trilife.queuePlayerLivesChange(link, -1, THIS.getServer());
+                        else Trilife.queuePlayerLivesChange(linkUUID, -1, THIS.getServer());
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
