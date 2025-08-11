@@ -47,6 +47,7 @@ public class TrilifeEvents {
         LootTableEvents.MODIFY.register(TrilifeEvents::handleLootTableModify);
         ServerLivingEntityEvents.AFTER_DEATH.register(TrilifeEvents::handleLivingEntityAfterDeath);
         CommandRegistrationCallback.EVENT.register(TrilifeEvents::handleCommandRegistration);
+
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

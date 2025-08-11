@@ -43,7 +43,8 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.SPEED, 10*20, 1),
         new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10*20, 1),
         new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 1),
-        new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1));
+        new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1),
+        new StatusEffectInstance(StatusEffects.STRENGTH, 10*20, 1));
     public static final LootTotemItem LOOT_TOTEM = new LootTotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final TotemItem REGEN_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 2));

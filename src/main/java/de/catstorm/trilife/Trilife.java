@@ -49,6 +49,10 @@ public class Trilife implements ModInitializer {
     }
 
     public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {
+        evalLives(player, lives, server, true);
+    }
+
+    private static void evalLives(LivingEntity player, int lives, MinecraftServer server, boolean firstRun) {
         try {
             ServerScoreboard scoreboard = server.getScoreboard();
             assert scoreboard != null;
@@ -72,9 +76,15 @@ public class Trilife implements ModInitializer {
             }
         }
         catch (Exception e) {
-            LOGGER.error("An error occurred whilst evaluating lives. If you just created this world, this can be ignored.");
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+            if (firstRun) {
+                LOGGER.warn("Evaluating lives failed, this is normal during first world creation. Running team generation and retrying.");
+                TrilifeCommands.teamGen(server);
+                evalLives(player, lives, server, false);
+            }
+            else {
+                LOGGER.error("A serious problem occurred whilst evaluating lives.");
+                e.printStackTrace();
+            }
         }
     }
 

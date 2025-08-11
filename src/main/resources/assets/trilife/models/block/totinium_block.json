@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "down": "trilife:block/totinium_block",
-    "up": "trilife:block/totinium_block",
-    "north": "trilife:block/totinium_block_eyes",
-    "west": "trilife:block/totinium_block",
-    "east": "trilife:block/totinium_block",
+    "down": "trilife:block/totinium_block_eyes_closed",
+    "up": "trilife:block/totinium_block_eyes",
+    "north": "trilife:block/totinium_block_eyes_closed",
+    "west": "trilife:block/totinium_block_eyes_closed",
+    "east": "trilife:block/totinium_block_eyes_closed",
     "south": "trilife:block/totinium_block_eyes_closed"
   }
 }

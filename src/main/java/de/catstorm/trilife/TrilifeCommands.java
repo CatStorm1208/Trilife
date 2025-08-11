@@ -94,8 +94,7 @@ public class TrilifeCommands {
         return 0;
     }
 
-    protected static int init(CommandContext<ServerCommandSource> context) {
-        MinecraftServer server = context.getSource().getServer();
+    protected static void teamGen(MinecraftServer server) {
         ServerScoreboard scoreboard = server.getScoreboard();
 
         Team blues = scoreboard.addTeam("blues");
@@ -117,6 +116,11 @@ public class TrilifeCommands {
         reds.setFriendlyFireAllowed(true);
         reds.setShowFriendlyInvisibles(false);
         reds.setColor(Formatting.RED);
+    }
+
+    protected static int init(CommandContext<ServerCommandSource> context) {
+        MinecraftServer server = context.getSource().getServer();
+        teamGen(server);
 
         for (var player : server.getPlayerManager().getPlayerList()) {
             PlayerData playerState = StateSaverAndLoader.getPlayerState(player);

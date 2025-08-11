@@ -3,14 +3,11 @@
     "pattern": [
         "GGG",
         "GTG",
-        "ODO"
+        "DDD"
     ],
     "key": {
         "G": {
             "item": "minecraft:glass"
-        },
-        "O": {
-            "item": "minecraft:obsidian"
         },
         "D": {
             "item": "minecraft:diamond"
