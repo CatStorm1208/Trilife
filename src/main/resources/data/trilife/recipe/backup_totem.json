@@ -2,7 +2,7 @@
     "type": "minecraft:crafting_shapeless",
     "ingredients": [
         {
-            "item": "trilife:totinium_ingot"
+            "item": "trilife:totinium_block"
         },
         {
             "item": "trilife:armour_totem"

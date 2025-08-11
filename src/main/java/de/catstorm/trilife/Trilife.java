@@ -14,7 +14,6 @@ import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.server.MinecraftServer;
@@ -31,7 +30,6 @@ import java.util.UUID;
 public class Trilife implements ModInitializer {
     public static final String MOD_ID = "trilife";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    @Deprecated protected static final HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
     public static final HashMap<UUID, Integer> playerLogoutZombies = new HashMap<>();
     public static final HashMap<UUID, Set<ItemStack>> zombieInventories = new HashMap<>();
 
@@ -97,10 +95,6 @@ public class Trilife implements ModInitializer {
             if (player.getUuid().equals(uuid)) return true;
         }
         return false;
-    }
-
-    public static void queuePlayerLivesChange(PlayerEntity player, int change, MinecraftServer server) {
-        queuePlayerLivesChange(player.getUuid(), change, server);
     }
 
     public static void queuePlayerLivesChange(UUID uuid, int change, MinecraftServer server) {
