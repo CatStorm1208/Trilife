@@ -17,7 +17,8 @@ public class TrilifeBlocks {
     public static final TotemVaultBlock TOTEM_VAULT = new TotemVaultBlock(AbstractBlock.Settings.create().nonOpaque()
         .mapColor(MapColor.OAK_TAN).instrument(NoteBlockInstrument.BASS).strength(-1.0f, 3600000.0f)
         .sounds(BlockSoundGroup.VAULT));
-    public static final Block TOTINIUM_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK).mapColor(MapColor.GRAY));
+    public static final Block TOTINIUM_BLOCK = new Block(AbstractBlock.Settings
+            .copy(Blocks.NETHERITE_BLOCK).mapColor(MapColor.GRAY));
 
     public static void initBlocks() {
         Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "totem_vault"), TOTEM_VAULT);

@@ -69,4 +69,9 @@ public class TotemVaultBlock extends BlockWithEntity {
     protected BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
+
+    @Override
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        return super.onBreak(world, pos, state, player);
+    }
 }
