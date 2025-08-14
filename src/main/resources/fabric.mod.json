@@ -9,7 +9,8 @@
         "repo": ""
     },
     "license": "MIT",
-    "icon": "assets/trilife/icon.png",
+    "icon": "assets/trilife/textures/gui/sprites/heart/full_heart.png",
+    "accessWidener" : "trilife.accesswidener",
     "environment": "*",
     "entrypoints": {
         "client": [

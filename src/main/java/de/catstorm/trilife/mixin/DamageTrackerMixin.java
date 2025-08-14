@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DamageTracker.class)
-public class DamageTrackerMixin {
+public abstract class DamageTrackerMixin {
     @Shadow @Final private LivingEntity entity;
 
     @Inject(method = "onDamage", at = @At("HEAD"))

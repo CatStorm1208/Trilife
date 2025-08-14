@@ -3,10 +3,11 @@ package de.catstorm.trilife.client;
 import de.catstorm.trilife.logic.AlternatingValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,21 +20,27 @@ public class SoulHeartDialogue extends Screen {
     public Set<ButtonWidget> buttons = new HashSet<>();
     private final AlternatingValue<Integer> alternatingX = new AlternatingValue<>(-205, 5);
 
+
     @Override
     protected void init() {
         clearChildren();
         buttons.clear();
-        var world = MinecraftClient.getInstance().world;
-        assert world != null;
-        var playerList = world.getPlayers();
+
+        assert client != null;
+        assert client.player != null;
+        var playerList = client.player.networkHandler.getListedPlayerListEntries().stream()
+            .sorted(PlayerListHud.ENTRY_ORDERING).limit(20L).toList();
         int n = 20;
 
         alternatingX.reset();
 
         for (var player : playerList) {
-            if (buttonsContainPlayerName(player.getNameForScoreboard())) continue;
+            if (player.getDisplayName() == null) continue;
 
-            ButtonWidget button = ButtonWidget.builder(Text.literal(player.getNameForScoreboard()), this::handleButtonPress)
+            String displayName = player.getDisplayName().getString();
+            if (displayName == null || buttonsContainPlayerName(displayName)) continue;
+
+            ButtonWidget button = ButtonWidget.builder(Text.literal(displayName), this::handleButtonPress)
                 .dimensions(width/2 + alternatingX.next(), n, 200, 20).build();
 
             if (alternatingX.get() == 5) n += 30;
@@ -53,7 +60,7 @@ public class SoulHeartDialogue extends Screen {
     private void handleButtonPress(ButtonWidget button) {
         assert client != null;
         assert client.player != null;
-        //NOTE: I wanted to move away from this, it needs to be changed, but it's convenient atm
+        //NOTE: I wanted to move away from this. It needs to be changed, but it's convenient atm
         client.player.networkHandler.sendChatCommand("trilife revive " + button.getMessage().getString());
         close();
     }

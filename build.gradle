@@ -17,6 +17,10 @@ plugins {
     id 'maven-publish'
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/trilife.accesswidener")
+}
+
 version = project.mod_version + "+" + getCheckedOutGitCommitHash()
 group = project.maven_group
 
