@@ -1,19 +1,32 @@
 package de.catstorm.trilife.logic;
 
+import de.catstorm.trilife.PlayerData;
 import de.catstorm.trilife.StateSaverAndLoader;
 import de.catstorm.trilife.Trilife;
+import de.catstorm.trilife.item.TrilifeItems;
+import de.catstorm.trilife.records.PlayerLivesPayload;
+import de.catstorm.trilife.sound.TrilifeSounds;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
+
+import java.util.EnumSet;
 import java.util.UUID;
 
 public class PlayerUtility {
@@ -103,5 +116,42 @@ public class PlayerUtility {
         reds.setFriendlyFireAllowed(true);
         reds.setShowFriendlyInvisibles(false);
         reds.setColor(Formatting.RED);
+    }
+
+    public static void revivePlayer(ServerPlayerEntity executor, ServerPlayerEntity revived, MinecraftServer server) {
+        for (var item : executor.getHandItems()) {
+            if (item.isOf(TrilifeItems.SOUL_HEART)) {
+                PlayerData revivedState = StateSaverAndLoader.getPlayerState(revived);
+                PlayerData executorState = StateSaverAndLoader.getPlayerState(executor);
+
+                if (revivedState.lives != 0) {
+                    executor.sendMessage(Text.of("This player is still alive!"));
+                    return;
+                }
+
+                revivedState.lives += 1;
+                executorState.lives -= 1;
+
+                PlayerUtility.evalLives(revived, revivedState.lives, server);
+                PlayerUtility.evalLives(executor, executorState.lives, server);
+
+                server.execute(() -> {
+                    ServerPlayNetworking.send(revived, new PlayerLivesPayload(revivedState.lives));
+                    ServerPlayNetworking.send(executor, new PlayerLivesPayload(executorState.lives));
+                });
+
+                revived.teleport((ServerWorld) revived.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
+                    EnumSet.noneOf(PositionFlag.class), executor.getYaw(), executor.getPitch());
+                PlayerUtility.grantAdvancement(revived, "im_alive_is_nice");
+                PlayerUtility.grantAdvancement(executor, "necromancer");
+
+                item.decrement(1);
+
+                revived.networkHandler.sendPacket(new PlaySoundS2CPacket(
+                    RegistryEntry.of(TrilifeSounds.REVIVE_PLAYER), SoundCategory.NEUTRAL,
+                    revived.getX(), revived.getY(), revived.getZ(), 1f, 1f,
+                    revived.getWorld().getRandom().nextLong()));
+            }
+        }
     }
 }

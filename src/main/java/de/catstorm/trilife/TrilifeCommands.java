@@ -24,7 +24,7 @@ import net.minecraft.world.GameMode;
 import java.util.EnumSet;
 
 public class TrilifeCommands {
-    @Deprecated
+    @Deprecated(forRemoval = true)
     protected static int revive(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         assert context.getSource().getPlayer() != null;
         for (var item : context.getSource().getPlayer().getHandItems()) {

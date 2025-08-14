@@ -1,8 +1,10 @@
 package de.catstorm.trilife.client;
 
 import de.catstorm.trilife.logic.AlternatingValue;
+import de.catstorm.trilife.records.RevivePlayerPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.gui.screen.Screen;
@@ -49,7 +51,6 @@ public class SoulHeartDialogue extends Screen {
             buttons.add(button);
         }
 
-        //TODO: text
         for (ButtonWidget button : buttons) addDrawableChild(button);
     }
 
@@ -67,8 +68,8 @@ public class SoulHeartDialogue extends Screen {
     private void handleButtonPress(ButtonWidget button) {
         assert client != null;
         assert client.player != null;
-        //NOTE: I wanted to move away from this. It needs to be changed, but it's convenient atm
-        client.player.networkHandler.sendChatCommand("trilife revive " + button.getMessage().getString());
+        //client.player.networkHandler.sendChatCommand("trilife revive " + button.getMessage().getString());
+        client.execute(() -> ClientPlayNetworking.send(new RevivePlayerPayload(button.getMessage().getString())));
         close();
     }
 }
