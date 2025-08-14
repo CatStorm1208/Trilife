@@ -1,27 +1,28 @@
 package de.catstorm.trilife.item;
 
-import de.catstorm.trilife.client.SoulHeartDialogue;
-import net.minecraft.client.MinecraftClient;
+import de.catstorm.trilife.records.TotemFloatPayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class SoulHeartItem extends Item {
-    SoulHeartDialogue dialogue = new SoulHeartDialogue(Text.literal("Soul Heart revive dialogue"));
+import java.util.Objects;
 
+public class SoulHeartItem extends Item {
     public SoulHeartItem(Settings settings) {
         super(settings);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            client.setScreen(dialogue);
+        if (user instanceof ServerPlayerEntity serverPlayer) {
+            Objects.requireNonNull(serverPlayer.getServer()).execute(() ->
+                ServerPlayNetworking.send(serverPlayer, new TotemFloatPayload(2)));
+            return TypedActionResult.success(user.getStackInHand(hand));
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }

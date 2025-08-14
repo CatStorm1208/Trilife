@@ -118,7 +118,7 @@ public class PlayerUtility {
         reds.setColor(Formatting.RED);
     }
 
-    public static void revivePlayer(ServerPlayerEntity executor, ServerPlayerEntity revived, MinecraftServer server) {
+    public static int revivePlayer(ServerPlayerEntity executor, ServerPlayerEntity revived, MinecraftServer server) {
         for (var item : executor.getHandItems()) {
             if (item.isOf(TrilifeItems.SOUL_HEART)) {
                 PlayerData revivedState = StateSaverAndLoader.getPlayerState(revived);
@@ -126,7 +126,7 @@ public class PlayerUtility {
 
                 if (revivedState.lives != 0) {
                     executor.sendMessage(Text.of("This player is still alive!"));
-                    return;
+                    return 1;
                 }
 
                 revivedState.lives += 1;
@@ -151,7 +151,10 @@ public class PlayerUtility {
                     RegistryEntry.of(TrilifeSounds.REVIVE_PLAYER), SoundCategory.NEUTRAL,
                     revived.getX(), revived.getY(), revived.getZ(), 1f, 1f,
                     revived.getWorld().getRandom().nextLong()));
+
+                return 0;
             }
         }
+        return 1;
     }
 }
