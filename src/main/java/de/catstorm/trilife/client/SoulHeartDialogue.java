@@ -30,7 +30,7 @@ public class SoulHeartDialogue extends Screen {
 
         alternatingX.reset();
 
-        for (var player : playerList) if (player.getScoreboardTeam() == null) {
+        for (var player : playerList) {
             if (buttonsContainPlayerName(player.getNameForScoreboard())) continue;
 
             ButtonWidget button = ButtonWidget.builder(Text.literal(player.getNameForScoreboard()), this::handleButtonPress)

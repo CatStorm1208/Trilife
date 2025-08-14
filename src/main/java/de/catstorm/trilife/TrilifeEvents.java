@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.*;
 import de.catstorm.trilife.item.TrilifeItems;
+import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -67,7 +68,7 @@ public class TrilifeEvents {
         }
 
         server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));
-        evalLives(handler.getPlayer(), playerState.lives, server);
+        PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server);
     }
 
     private static void handleServerPlayConnectionDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
@@ -124,7 +125,7 @@ public class TrilifeEvents {
             PlayerData playerState = StateSaverAndLoader.getPlayerState(entity);
             playerState.lives -= 1;
 
-            Trilife.evalLives(entity, playerState.lives, server);
+            PlayerUtility.evalLives(entity, playerState.lives, server);
 
             ServerPlayerEntity playerEntity = server.getPlayerManager().getPlayer(entity.getUuid());
             server.execute(() -> {
@@ -137,10 +138,10 @@ public class TrilifeEvents {
                 assert entity.getServer() != null;
                 if (entity.getUuidAsString().equals("ff1337da-66b4-46af-bc1d-51714fb8f93d") ||
                     entity.getCommandTags().contains("trilife_pisstest")) {
-                    Trilife.grantAdvancement(killer, "vecchios_saviour");
+                    PlayerUtility.grantAdvancement(killer, "vecchios_saviour");
                 }
                 if (playerState.lives == 0) {
-                    Trilife.grantAdvancement(killer, "the_end_is_never_the_end");
+                    PlayerUtility.grantAdvancement(killer, "the_end_is_never_the_end");
                 }
             }
         }

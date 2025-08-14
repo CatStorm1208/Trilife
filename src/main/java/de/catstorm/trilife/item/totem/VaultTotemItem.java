@@ -1,5 +1,6 @@
 package de.catstorm.trilife.item.totem;
 
+import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.block.TrilifeBlocks;
 import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
 import de.catstorm.trilife.item.TrilifeItems;
@@ -51,12 +52,17 @@ public class VaultTotemItem extends TotemItem {
                 Objects.requireNonNull(serverWorld.getBlockEntity(pos)));
 
             //Spaghetti coding at its finest
+            boolean vaultTotemRemoved = false;
             if (owner instanceof PlayerEntity player) for (int i = 0; i < player.getInventory().size(); i++) {
-                if (player.getInventory().getStack(i).isOf(TrilifeItems.VAULT_TOTEM)) continue;
+                if (!vaultTotemRemoved && player.getInventory().getStack(i).isOf(TrilifeItems.VAULT_TOTEM) ) {
+                    vaultTotemRemoved = true;
+                    continue;
+                }
                 blockEntity.setStack(i, player.getInventory().getStack(i));
             }
+
             blockEntity.setComponents(ComponentMap.builder()
-                .add(TrilifeItems.LINKED_PLAYER_COMPONENT, owner.getUuidAsString()).build());
+                .add(TrilifeComponents.LINKED_PLAYER_COMPONENT, owner.getUuidAsString()).build());
             ((PlayerEntity) owner).getInventory().clear();
         }
     }

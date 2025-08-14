@@ -1,11 +1,10 @@
 package de.catstorm.trilife.item;
 
-import com.mojang.serialization.Codec;
 import static de.catstorm.trilife.Trilife.MOD_ID;
+import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.block.TrilifeBlocks;
 import de.catstorm.trilife.item.totem.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,10 +16,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class TrilifeItems {
-    //Components
-    //NOTE: Could be moved to a TrilifeComponents class later
-    public static final ComponentType<String> LINKED_PLAYER_COMPONENT = ComponentType.<String>builder().codec(Codec.STRING).build();
-
     //Totems
     public static final Item EMPTY_TOTEM = new Item(new Item.Settings().maxCount(1));
     public static final ChorusTotemItem CHORUS_TOTEM = new ChorusTotemItem(new Item.Settings().maxCount(1), 1.0f);
@@ -36,7 +31,7 @@ public class TrilifeItems {
     public static final LinkableTotemItem LINKABLE_TOTEM = new LinkableTotemItem(new Item.Settings().maxCount(1));
     public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1)
         .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
-        .component(LINKED_PLAYER_COMPONENT, ""), 1.0f,
+        .component(TrilifeComponents.LINKED_PLAYER_COMPONENT, ""), 1.0f,
         new StatusEffectInstance(StatusEffects.ABSORPTION, 300*20, 4),
         new StatusEffectInstance(StatusEffects.REGENERATION, 30*20, 1));
     public static final TotemItem BACON_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
@@ -103,8 +98,6 @@ public class TrilifeItems {
         })).build();
 
     public static void initItems() {
-        Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of(MOD_ID, "linked_player"), LINKED_PLAYER_COMPONENT);
-
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "empty_totem"), EMPTY_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "chorus_totem"), CHORUS_TOTEM);
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "heart_totem"), HEART_TOTEM);

@@ -1,7 +1,7 @@
 package de.catstorm.trilife.mixin;
 
 import static de.catstorm.trilife.Trilife.playerLogoutZombies;
-import static de.catstorm.trilife.Trilife.isPlayerOnline;
+import static de.catstorm.trilife.logic.PlayerUtility.isPlayerOnline;
 import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import org.spongepowered.asm.mixin.Mixin;

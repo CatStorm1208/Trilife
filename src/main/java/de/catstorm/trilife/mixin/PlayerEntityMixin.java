@@ -16,7 +16,9 @@ public abstract class PlayerEntityMixin {
     @Inject(method = "dropInventory", at = @At("HEAD"), cancellable = true)
     private void dropInventory(CallbackInfo ci) {
         for (var item : getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
+            item.decrement(1);
             ci.cancel();
+            break;
         }
     }
 }

@@ -2,21 +2,24 @@ package de.catstorm.trilife.mixin;
 
 import de.catstorm.trilife.PlayerData;
 import de.catstorm.trilife.StateSaverAndLoader;
-import de.catstorm.trilife.Trilife;
 import static de.catstorm.trilife.Trilife.*;
+import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.item.totem.HeartTotemItem;
 import de.catstorm.trilife.item.totem.LinkedTotemItem;
 import de.catstorm.trilife.item.totem.TotemItem;
 import de.catstorm.trilife.item.TrilifeItems;
+import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.HuskEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -47,6 +50,12 @@ public abstract class LivingEntityMixin {
     //@Shadow protected abstract void consumeItem();
     //@Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
 
+    @Inject(method = "dropXp", at = @At("HEAD"), cancellable = true)
+    private void dropXp(Entity attacker, CallbackInfo ci) {
+        if (THIS instanceof PlayerEntity player) for (var item : player.getHandItems())
+            if (item.isOf(TrilifeItems.LOOT_TOTEM)) ci.cancel();
+    }
+
     @Inject(method = "eatFood", at = @At("HEAD"))
     private void eatFood(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
         if (stack.isOf(TrilifeItems.HEART_CAKE) && !world.isClient()) {
@@ -60,7 +69,7 @@ public abstract class LivingEntityMixin {
             assert serverPlayer != null;
             server.execute(() -> ServerPlayNetworking.send(serverPlayer, new PlayerLivesPayload(playerState.lives)));
 
-            evalLives(THIS, playerState.lives, server);
+            PlayerUtility.evalLives(THIS, playerState.lives, server);
 
             serverPlayer.networkHandler.sendPacket(new PlaySoundS2CPacket(
                 RegistryEntry.of(TrilifeSounds.EAT_HEART_CAKE), SoundCategory.NEUTRAL,
@@ -80,7 +89,7 @@ public abstract class LivingEntityMixin {
                 THIS.dropStack(stack);
             }
             zombieInventories.remove(uuid);
-            queuePlayerLivesChange(uuid, -1, THIS.getServer());
+            PlayerUtility.queuePlayerLivesChange(uuid, -1, THIS.getServer());
             break;
         }
     }
@@ -108,7 +117,7 @@ public abstract class LivingEntityMixin {
                 }
                 else if (item.getItem() instanceof LinkedTotemItem) {
                     @SuppressWarnings("DataFlowIssue") //lololololololol
-                    UUID linkUUID = UUID.fromString(item.get(TrilifeItems.LINKED_PLAYER_COMPONENT));
+                    UUID linkUUID = UUID.fromString(item.get(TrilifeComponents.LINKED_PLAYER_COMPONENT));
                     if (THIS.getUuidAsString().equals(linkUUID.toString())) {
                         cir.setReturnValue(false);
                     }
@@ -117,21 +126,20 @@ public abstract class LivingEntityMixin {
                         totem.onPop(source, THIS);
                         assert THIS.getServer() != null;
 
-                        if (isPlayerOnline(linkUUID, THIS.getServer())) {
+                        if (PlayerUtility.isPlayerOnline(linkUUID, THIS.getServer())) {
                             ServerPlayerEntity link = THIS.getServer().getPlayerManager().getPlayer(linkUUID);
                             assert link != null;
                             PlayerData linkState = StateSaverAndLoader.getPlayerState(link);
                             linkState.lives -= 1;
-                            Trilife.evalLives(link, linkState.lives, THIS.getServer());
+                            PlayerUtility.evalLives(link, linkState.lives, THIS.getServer());
 
                             THIS.getServer().execute(() -> ServerPlayNetworking.send(link, new PlayerLivesPayload(linkState.lives)));
                         }
-                        else Trilife.queuePlayerLivesChange(linkUUID, -1, THIS.getServer());
+                        else PlayerUtility.queuePlayerLivesChange(linkUUID, -1, THIS.getServer());
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
                     totem.onPop(source, THIS);
-                    item.decrement(1);
                     cir.setReturnValue(false);
                 }
                 else {

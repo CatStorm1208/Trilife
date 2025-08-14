@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.catstorm.trilife.item.TrilifeItems;
+import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
@@ -12,15 +13,12 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.scoreboard.ServerScoreboard;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
 
 import java.util.EnumSet;
@@ -49,8 +47,8 @@ public class TrilifeCommands {
                 revivedState.lives += 1;
                 executorState.lives -= 1;
 
-                Trilife.evalLives(revived, revivedState.lives, server);
-                Trilife.evalLives(executor, executorState.lives, server);
+                PlayerUtility.evalLives(revived, revivedState.lives, server);
+                PlayerUtility.evalLives(executor, executorState.lives, server);
 
                 server.execute(() -> {
                     ServerPlayNetworking.send(revived, new PlayerLivesPayload(revivedState.lives));
@@ -59,8 +57,8 @@ public class TrilifeCommands {
 
                 revived.teleport((ServerWorld) revived.getWorld(), executor.getX(), executor.getY(), executor.getZ(),
                     EnumSet.noneOf(PositionFlag.class), executor.getYaw(), executor.getPitch());
-                Trilife.grantAdvancement(revived, "im_alive_is_nice");
-                Trilife.grantAdvancement(executor, "necromancer");
+                PlayerUtility.grantAdvancement(revived, "im_alive_is_nice");
+                PlayerUtility.grantAdvancement(executor, "necromancer");
 
                 item.decrement(1);
 
@@ -90,37 +88,13 @@ public class TrilifeCommands {
             ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
         });
 
-        Trilife.evalLives(player, playerState.lives, server);
+        PlayerUtility.evalLives(player, playerState.lives, server);
         return 0;
-    }
-
-    protected static void teamGen(MinecraftServer server) {
-        ServerScoreboard scoreboard = server.getScoreboard();
-
-        Team blues = scoreboard.addTeam("blues");
-        blues.setFriendlyFireAllowed(true);
-        blues.setShowFriendlyInvisibles(false);
-        blues.setColor(Formatting.BLUE);
-
-        Team greens = scoreboard.addTeam("greens");
-        greens.setFriendlyFireAllowed(true);
-        greens.setShowFriendlyInvisibles(false);
-        greens.setColor(Formatting.GREEN);
-
-        Team yellows = scoreboard.addTeam("yellows");
-        yellows.setFriendlyFireAllowed(true);
-        yellows.setShowFriendlyInvisibles(false);
-        yellows.setColor(Formatting.YELLOW);
-
-        Team reds = scoreboard.addTeam("reds");
-        reds.setFriendlyFireAllowed(true);
-        reds.setShowFriendlyInvisibles(false);
-        reds.setColor(Formatting.RED);
     }
 
     protected static int init(CommandContext<ServerCommandSource> context) {
         MinecraftServer server = context.getSource().getServer();
-        teamGen(server);
+        PlayerUtility.teamGen(server);
 
         for (var player : server.getPlayerManager().getPlayerList()) {
             PlayerData playerState = StateSaverAndLoader.getPlayerState(player);
@@ -128,9 +102,9 @@ public class TrilifeCommands {
 
             server.execute(() -> ServerPlayNetworking.send(player, new PlayerLivesPayload(playerState.lives)));
 
-            Trilife.evalLives(player, playerState.lives, server);
+            PlayerUtility.evalLives(player, playerState.lives, server);
 
-            Trilife.grantAdvancement(player, "root");
+            PlayerUtility.grantAdvancement(player, "root");
         }
 
         server.setDefaultGameMode(GameMode.SURVIVAL);
@@ -152,7 +126,7 @@ public class TrilifeCommands {
                 ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
             });
 
-            Trilife.evalLives(player, playerState.lives, server);
+            PlayerUtility.evalLives(player, playerState.lives, server);
         }
         return 0;
     }

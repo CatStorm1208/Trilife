@@ -1,8 +1,8 @@
 package de.catstorm.trilife.block;
 
 import com.mojang.serialization.MapCodec;
+import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
-import de.catstorm.trilife.item.TrilifeItems;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -43,7 +43,7 @@ public class TotemVaultBlock extends BlockWithEntity {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         assert blockEntity != null;
 
-        String linkedPlayer = blockEntity.getComponents().get(TrilifeItems.LINKED_PLAYER_COMPONENT);
+        String linkedPlayer = blockEntity.getComponents().get(TrilifeComponents.LINKED_PLAYER_COMPONENT);
         if (linkedPlayer == null) {
             player.sendMessage(Text.of("For unknown reasons, this vault is invalid and thus unusable."));
             return ActionResult.FAIL;

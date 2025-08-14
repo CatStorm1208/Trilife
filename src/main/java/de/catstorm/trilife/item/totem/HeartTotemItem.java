@@ -2,7 +2,7 @@ package de.catstorm.trilife.item.totem;
 
 import de.catstorm.trilife.PlayerData;
 import de.catstorm.trilife.StateSaverAndLoader;
-import de.catstorm.trilife.Trilife;
+import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
@@ -30,6 +30,6 @@ public class HeartTotemItem extends TotemItem {
 
         assert owner.getServer() != null;
 
-        Trilife.grantAdvancement(owner, "cheater");
+        PlayerUtility.grantAdvancement(owner, "cheater");
     }
 }

@@ -1,6 +1,7 @@
 package de.catstorm.trilife.item; //de.catstorm.trilife.item.totem is only for items that extend TotemItem ig
 
-import de.catstorm.trilife.Trilife;
+import de.catstorm.trilife.TrilifeComponents;
+import de.catstorm.trilife.logic.PlayerUtility;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,10 +21,9 @@ public class LinkableTotemItem extends Item {
 
         if (user instanceof ServerPlayerEntity player) {
             itemStack = new ItemStack(TrilifeItems.LINKED_TOTEM);
-            itemStack.set(TrilifeItems.LINKED_PLAYER_COMPONENT, player.getUuidAsString());
-            player.getInventory().setStack(player.getInventory().selectedSlot, itemStack);
+            itemStack.set(TrilifeComponents.LINKED_PLAYER_COMPONENT, player.getUuidAsString());
 
-            Trilife.grantAdvancement(player, "contract");
+            PlayerUtility.grantAdvancement(player, "contract");
         }
         return TypedActionResult.pass(itemStack);
     }
