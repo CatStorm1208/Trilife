@@ -72,7 +72,7 @@ public class TrilifeEvents {
     }
 
     private static void handleServerPlayConnectionDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
-        ServerPlayerEntity player = handler.getPlayer();
+        ServerPlayerEntity player = handler.player;
         World world = player.getWorld();
 
         HuskEntity zombie = new HuskEntity(EntityType.HUSK, world);
