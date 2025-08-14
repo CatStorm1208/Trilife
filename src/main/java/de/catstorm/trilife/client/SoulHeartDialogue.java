@@ -3,6 +3,7 @@ package de.catstorm.trilife.client;
 import de.catstorm.trilife.logic.AlternatingValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -30,7 +31,7 @@ public class SoulHeartDialogue extends Screen {
         assert client.player != null;
         var playerList = client.player.networkHandler.getListedPlayerListEntries().stream()
             .sorted(PlayerListHud.ENTRY_ORDERING).limit(20L).toList();
-        int n = 20;
+        int n = 50;
 
         alternatingX.reset();
 
@@ -50,6 +51,12 @@ public class SoulHeartDialogue extends Screen {
 
         //TODO: text
         for (ButtonWidget button : buttons) addDrawableChild(button);
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        context.drawCenteredTextWithShadow(textRenderer, "Who do you wish to revive?", width/2, 20, 0xffffff);
     }
 
     private boolean buttonsContainPlayerName(String name) {
