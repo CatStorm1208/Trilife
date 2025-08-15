@@ -9,10 +9,10 @@
         "EntityMixin",
         "LivingEntityMixin",
         "PlayerEntityMixin",
+        "ServerPlayerEntityMixin",
         "ZombieEntityMixin"
     ],
     "client": [
-        "ClientPlayerEntityMixin",
         "DeathScreenMixin",
         "GameRendererMixin",
         "InGameHudMixin",

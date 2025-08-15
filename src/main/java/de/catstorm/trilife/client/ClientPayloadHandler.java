@@ -40,6 +40,7 @@ public class ClientPayloadHandler {
                 dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
                 MinecraftClient.getInstance().setScreen(dialogue);
             }
+            case 3 -> TrilifeClient.animationCanStart = true;
         }
     }
 }
