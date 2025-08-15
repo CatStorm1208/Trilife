@@ -2,7 +2,6 @@ package de.catstorm.trilife;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import static de.catstorm.trilife.Trilife.*;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
@@ -32,7 +31,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
@@ -40,6 +38,9 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import static de.catstorm.trilife.Trilife.playerLogoutZombies;
+import static de.catstorm.trilife.Trilife.zombieInventories;
 
 public class TrilifeEvents {
     public static void initEvents() {
@@ -75,15 +76,16 @@ public class TrilifeEvents {
         ServerPlayerEntity player = handler.player;
         World world = player.getWorld();
 
-        HuskEntity zombie = new HuskEntity(EntityType.HUSK, world);
-        zombie.updatePosition(player.getX(), player.getY(), player.getZ());
-        zombie.addCommandTag("ghost_" + player.getUuidAsString());
-        zombie.setAiDisabled(true);
-        zombie.setCustomName(Text.of(player.getNameForScoreboard()));
-        zombie.setUuid(UUID.randomUUID());
-        if (world instanceof ServerWorld serverWorld) {
-            serverWorld.tryLoadEntity(zombie);
-        }
+        server.execute(() -> {
+            HuskEntity zombie = new HuskEntity(EntityType.HUSK, world);
+            zombie.updatePosition(player.getX(), player.getY(), player.getZ());
+            zombie.addCommandTag("ghost_" + player.getUuidAsString());
+            zombie.setAiDisabled(true);
+            zombie.setCustomName(Text.of(player.getNameForScoreboard()));
+            zombie.setUuid(UUID.randomUUID());
+            world.spawnEntity(zombie);
+        });
+
 
         playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //NOTE: 3600*20
 
@@ -153,9 +155,9 @@ public class TrilifeEvents {
         dispatcher.register(CommandManager.literal("trilife")
             /*.then(CommandManager.literal("link")
                 .executes(TrilifeCommands::link))*/
-            .then(CommandManager.literal("revive")
+            /*.then(CommandManager.literal("revive")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
-                    .executes(TrilifeCommands::revive)))
+                    .executes(TrilifeCommands::revive)))*/
             .then(CommandManager.literal("increment")
                 .requires(source -> source.hasPermissionLevel(4))
                 .then(CommandManager.argument("player", EntityArgumentType.player())
