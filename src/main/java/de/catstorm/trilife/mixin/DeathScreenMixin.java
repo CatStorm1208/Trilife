@@ -19,8 +19,8 @@ import java.util.ArrayList;
 @Mixin(DeathScreen.class)
 public abstract class DeathScreenMixin {
     @Unique private static long deathAnimationStartTime = 0;
-    @Unique private static final int deathAnimationFrameCount = 21;
-    @Unique private static final int deathAnimationFps = 20;
+    @Unique private static final int deathAnimationFrameCount = 9;
+    @Unique private static final int deathAnimationFps = 8;
     @Unique private static final ArrayList<Identifier> DEATH_TEXTURES = new ArrayList<>();
 
     @Inject(method = "init", at = @At("HEAD"))
@@ -47,8 +47,8 @@ public abstract class DeathScreenMixin {
             context.getMatrices().scale(2.0f, 2.0f, 2.0f);
             context.getMatrices().pop();
 
-            context.drawGuiTexture(DEATH_TEXTURES.get(frame), (context.getScaledWindowWidth()/2)-5,
-                (context.getScaledWindowHeight()/2)-65, 40, 40);
+            context.drawGuiTexture(DEATH_TEXTURES.get(frame), (context.getScaledWindowWidth()/2)-20,
+                (context.getScaledWindowHeight()/2)-20, 40, 40);
             RenderSystem.disableBlend();
             ci.cancel();
         }
