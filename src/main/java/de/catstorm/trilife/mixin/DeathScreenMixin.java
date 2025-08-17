@@ -24,7 +24,7 @@ public abstract class DeathScreenMixin {
     @Unique private static final ArrayList<Identifier> DEATH_TEXTURES = new ArrayList<>();
 
     @Inject(method = "init", at = @At("HEAD"))
-    private void initHead(CallbackInfo ci) {
+    private void init(CallbackInfo ci) {
         for (int i = 0; i < deathAnimationFrameCount; i++) {
             DEATH_TEXTURES.add(Identifier.of(MOD_ID, "hud/death/animation" + i));
         }
