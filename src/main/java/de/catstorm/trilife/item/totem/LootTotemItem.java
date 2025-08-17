@@ -10,6 +10,7 @@ public class LootTotemItem extends TotemItem {
     }
 
     @Override
+    @Deprecated
     public void onPop(DamageSource source, LivingEntity owner) {
         //I love inheritance... until this shit happens
     }

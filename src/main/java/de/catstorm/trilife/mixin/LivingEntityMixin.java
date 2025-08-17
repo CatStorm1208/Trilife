@@ -124,6 +124,7 @@ public abstract class LivingEntityMixin {
                     else {
                         cir.setReturnValue(true);
                         totem.onPop(source, THIS);
+                        THIS.getWorld().sendEntityStatus(THIS, (byte) 35);
                         assert THIS.getServer() != null;
 
                         if (PlayerUtility.isPlayerOnline(linkUUID, THIS.getServer())) {
@@ -139,7 +140,7 @@ public abstract class LivingEntityMixin {
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
-                    totem.onPop(source, THIS);
+                    item.decrement(1);
                     cir.setReturnValue(false);
                 }
                 else {
