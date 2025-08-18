@@ -31,8 +31,9 @@ public class SoulHeartDialogue extends Screen {
 
         assert client != null;
         assert client.player != null;
+        //TODO: proper handling for a list that is too big
         var playerList = client.player.networkHandler.getListedPlayerListEntries().stream()
-            .sorted(PlayerListHud.ENTRY_ORDERING).limit(20L).toList();
+            .sorted(PlayerListHud.ENTRY_ORDERING).limit(30L).toList();
         int n = 50;
 
         alternatingX.reset();

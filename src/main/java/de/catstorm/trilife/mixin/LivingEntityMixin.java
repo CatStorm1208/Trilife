@@ -2,24 +2,23 @@ package de.catstorm.trilife.mixin;
 
 import de.catstorm.trilife.PlayerData;
 import de.catstorm.trilife.StateSaverAndLoader;
-import static de.catstorm.trilife.Trilife.*;
+import static de.catstorm.trilife.Trilife.playerLogoutZombies;
+import static de.catstorm.trilife.Trilife.zombieInventories;
 import de.catstorm.trilife.TrilifeComponents;
+import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.item.totem.HeartTotemItem;
 import de.catstorm.trilife.item.totem.LinkedTotemItem;
 import de.catstorm.trilife.item.totem.TotemItem;
-import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import de.catstorm.trilife.sound.TrilifeSounds;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.component.type.FoodComponent;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.EvokerEntity;
 import net.minecraft.entity.mob.HuskEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -46,12 +45,6 @@ public abstract class LivingEntityMixin {
     @Unique private LivingEntity THIS = (LivingEntity) (Object) this;
     @Shadow public abstract Iterable<ItemStack> getHandItems();
     @Shadow public abstract void playSound(@Nullable SoundEvent sound);
-
-    @Inject(method = "dropXp", at = @At("HEAD"), cancellable = true)
-    private void dropXp(Entity attacker, CallbackInfo ci) {
-        if (THIS instanceof PlayerEntity player) for (var item : player.getHandItems())
-            if (item.isOf(TrilifeItems.LOOT_TOTEM)) ci.cancel();
-    }
 
     @Inject(method = "eatFood", at = @At("HEAD"))
     private void eatFood(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
@@ -87,6 +80,7 @@ public abstract class LivingEntityMixin {
             }
             zombieInventories.remove(uuid);
             PlayerUtility.queuePlayerLivesChange(uuid, -1, THIS.getServer());
+            playerLogoutZombies.remove(uuid);
             break;
         }
     }

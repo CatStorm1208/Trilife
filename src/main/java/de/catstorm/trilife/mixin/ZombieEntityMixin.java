@@ -20,10 +20,16 @@ public abstract class ZombieEntityMixin {
     private void tick(CallbackInfo ci) {
         if (THIS instanceof HuskEntity husk) for (String tag : husk.getCommandTags()) if (tag.startsWith("ghost_")) {
             UUID uuid = UUID.fromString(tag.split("_")[1]);
-            if (!playerLogoutZombies.containsKey(uuid)) THIS.discard();
-            else if (playerLogoutZombies.get(uuid) <= Objects.requireNonNull(THIS.getServer()).getTicks()) THIS.discard();
+            if (!playerLogoutZombies.containsKey(uuid)) discardAndRemove(uuid);
+            else if (playerLogoutZombies.get(uuid) <= Objects.requireNonNull(THIS.getServer()).getTicks()) discardAndRemove(uuid);
             else if (PlayerUtility.isPlayerOnline(uuid, THIS.getServer()) &&
-                playerLogoutZombies.get(uuid) - THIS.getServer().getTicks() < (60-5)*20) THIS.discard(); //TODO: 3600-5
+                playerLogoutZombies.get(uuid) - THIS.getServer().getTicks() < (3600-5)*20) discardAndRemove(uuid); //TODO: 3600-5
         }
+    }
+
+    @Unique
+    private void discardAndRemove(UUID uuid) {
+        THIS.discard();
+        playerLogoutZombies.remove(uuid);
     }
 }

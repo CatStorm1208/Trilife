@@ -8,6 +8,7 @@ import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -46,10 +47,14 @@ public class TrilifeEvents {
         LootTableEvents.MODIFY.register(TrilifeEvents::handleLootTableModify);
         ServerLivingEntityEvents.AFTER_DEATH.register(TrilifeEvents::handleLivingEntityAfterDeath);
         CommandRegistrationCallback.EVENT.register(TrilifeEvents::handleCommandRegistration);
+        ServerLifecycleEvents.SERVER_STOPPING.register(TrilifeEvents::handleServerStopping);
+    }
+
+    private static void handleServerStopping(MinecraftServer server) {
+        if (!server.isDedicated()) playerLogoutZombies.clear();
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        //TODO?: discard zombie on player join
         PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
         StateSaverAndLoader state = StateSaverAndLoader.getServerState(server);
         if (state.playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
@@ -83,7 +88,7 @@ public class TrilifeEvents {
         });
 
         playerLogoutZombies.remove(player.getUuid());
-        playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //TODO: 3600*20
+        playerLogoutZombies.put(player.getUuid(), server.getTicks() + 3600*20);
 
         Set<ItemStack> drops = new HashSet<>();
         drops.addAll(player.getInventory().main);
@@ -114,7 +119,6 @@ public class TrilifeEvents {
         }
     }
 
-    //What the fuck am I even doing?
     private static void handleLivingEntityAfterDeath(LivingEntity entity, DamageSource damageSource) {
         if (entity.isPlayer()) {
             MinecraftServer server = entity.getServer();
@@ -131,11 +135,9 @@ public class TrilifeEvents {
                 ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
             });
 
-            //Kill Piss advancement
             if (damageSource.getSource() instanceof PlayerEntity killer) {
                 assert entity.getServer() != null;
-                if (entity.getUuidAsString().equals("ff1337da-66b4-46af-bc1d-51714fb8f93d") ||
-                    entity.getCommandTags().contains("trilife_pisstest")) {
+                if (entity.getUuidAsString().equals("ff1337da-66b4-46af-bc1d-51714fb8f93d")) {
                     PlayerUtility.grantAdvancement(killer, "vecchios_saviour");
                 }
                 if (playerState.lives == 0) {
@@ -150,11 +152,6 @@ public class TrilifeEvents {
                                                   CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("trilife")
             .requires(source -> source.hasPermissionLevel(2)) //NOTE: maybe 3?
-            /*.then(CommandManager.literal("link")
-                .executes(TrilifeCommands::link))*/
-            /*.then(CommandManager.literal("revive")
-                .then(CommandManager.argument("player", EntityArgumentType.player())
-                    .executes(TrilifeCommands::revive)))*/
             .then(CommandManager.literal("increment")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::increment)))

@@ -41,6 +41,7 @@ public abstract class DeathScreenMixin {
             TrilifeClient.animationCanStart = false;
         }
 
+        //Math... fresh out of my ass
         int frame = Math.round((System.currentTimeMillis() - deathAnimationStartTime) / (1/(((float) deathAnimationFps)/1000)));
         if (frame < deathAnimationFrameCount) {
             context.getMatrices().push();

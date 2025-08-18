@@ -14,13 +14,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
 
 public class TrilifeCommands {
-    @Deprecated
-    protected static int revive(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        assert context.getSource().getPlayer() != null;
-        return PlayerUtility.revivePlayer(context.getSource().getPlayer(),
-            EntityArgumentType.getPlayer(context, "player"), context.getSource().getServer());
-    }
-
     protected static int increment(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         var player = EntityArgumentType.getPlayer(context, "player");
 
@@ -44,6 +37,8 @@ public class TrilifeCommands {
         MinecraftServer server = context.getSource().getServer();
         PlayerUtility.teamGen(server);
 
+        server.setDefaultGameMode(GameMode.SURVIVAL);
+
         for (var player : server.getPlayerManager().getPlayerList()) {
             PlayerData playerState = StateSaverAndLoader.getPlayerState(player);
             playerState.lives = 3;
@@ -54,8 +49,6 @@ public class TrilifeCommands {
 
             PlayerUtility.grantAdvancement(player, "root");
         }
-
-        server.setDefaultGameMode(GameMode.SURVIVAL);
 
         return 0;
     }

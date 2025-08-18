@@ -8,7 +8,7 @@
         "EnderPearlItemMixin",
         "EntityMixin",
         "LivingEntityMixin",
-        "PlayerEntityMixin",
+        "PlayerInventoryMixin",
         "ServerPlayerEntityMixin",
         "ZombieEntityMixin"
     ],

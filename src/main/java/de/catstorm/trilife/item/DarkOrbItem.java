@@ -40,9 +40,9 @@ public class DarkOrbItem extends Item implements ProjectileItem {
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
         Random random = world.getRandom();
-        double d = random.nextTriangular(direction.getOffsetX(), 0.11485000000000001);
-        double e = random.nextTriangular(direction.getOffsetY(), 0.11485000000000001);
-        double f = random.nextTriangular(direction.getOffsetZ(), 0.11485000000000001);
+        double d = random.nextTriangular(direction.getOffsetX(), 0.11485000000000001/2);
+        double e = random.nextTriangular(direction.getOffsetY(), 0.11485000000000001/2);
+        double f = random.nextTriangular(direction.getOffsetZ(), 0.11485000000000001/2);
         Vec3d vec3d = new Vec3d(d, e, f);
         DarkOrbEntity darkOrbEntity = new DarkOrbEntity(world, pos.getX(), pos.getY(), pos.getZ(), vec3d);
         darkOrbEntity.setVelocity(vec3d);

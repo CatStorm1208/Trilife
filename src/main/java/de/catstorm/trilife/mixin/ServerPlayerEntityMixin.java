@@ -1,5 +1,6 @@
 package de.catstorm.trilife.mixin;
 
+import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.records.TotemFloatPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.damage.DamageSource;
@@ -21,5 +22,19 @@ public abstract class ServerPlayerEntityMixin {
     @Inject(method = "onDeath", at = @At("HEAD"))
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         server.execute(() -> ServerPlayNetworking.send(THIS, new TotemFloatPayload(3)));
+    }
+
+    //fucking hell finally
+    @Inject(method = "copyFrom", at = @At("HEAD"))
+    private void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        if (!alive) for (var item : oldPlayer.getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
+            item.decrement(1);
+            THIS.getInventory().clone(oldPlayer.getInventory());
+            THIS.experienceLevel = oldPlayer.experienceLevel;
+            THIS.totalExperience = oldPlayer.totalExperience;
+            THIS.experienceProgress = oldPlayer.experienceProgress;
+            THIS.setScore(oldPlayer.getScore());
+            break;
+        }
     }
 }

@@ -18,10 +18,10 @@ public class TrilifeClientEvents {
     private static final Identifier FOURTH_HEART = Identifier.of(MOD_ID, "heart/overheart");
 
     public static void initClientEvents() {
-        HudRenderCallback.EVENT.register(TrilifeClientEvents::render);
+        HudRenderCallback.EVENT.register(TrilifeClientEvents::handleHudRender);
     }
 
-    public static void render(DrawContext context, RenderTickCounter tickCounter) {
+    public static void handleHudRender(DrawContext context, RenderTickCounter tickCounter) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
         if (player.isCreative()) return;

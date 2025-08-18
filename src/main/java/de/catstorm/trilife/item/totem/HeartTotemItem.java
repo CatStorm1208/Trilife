@@ -28,8 +28,6 @@ public class HeartTotemItem extends TotemItem {
             ServerPlayNetworking.send(playerEntity, new PlayerLivesPayload(playerState.lives));
         });
 
-        assert owner.getServer() != null;
-
         PlayerUtility.grantAdvancement(owner, "cheater");
     }
 }

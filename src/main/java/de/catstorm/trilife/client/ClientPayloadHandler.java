@@ -14,8 +14,6 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class ClientPayloadHandler {
-    //Too lazy to check whether this warning is justified or not
-    @SuppressWarnings("FieldCanBeLocal") private static SoulHeartDialogue dialogue;
 
     protected static void handlePlayerLivesPayload(PlayerLivesPayload payload, ClientPlayNetworking.Context context) {
         ClientPlayerEntity player = context.client().player;
@@ -37,7 +35,8 @@ public class ClientPayloadHandler {
             }
             case 1 -> MinecraftClient.getInstance().gameRenderer.showFloatingItem(new ItemStack(TrilifeItems.GENFROSTED));
             case 2 -> {
-                dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
+                //NOTE: maybe local is not a smart idea?
+                SoulHeartDialogue dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
                 MinecraftClient.getInstance().setScreen(dialogue);
             }
             case 3 -> TrilifeClient.animationCanStart = true;

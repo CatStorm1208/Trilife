@@ -40,7 +40,7 @@ public class TrilifeItems {
         new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 1),
         new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1),
         new StatusEffectInstance(StatusEffects.STRENGTH, 10*20, 1));
-    public static final LootTotemItem LOOT_TOTEM = new LootTotemItem(new Item.Settings().maxCount(1), 1.0f);
+    public static final TotemItem LOOT_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final TotemItem REGEN_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
         new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 2));
     public static final ArmourTotemItem BACKUP_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 20.0f);
@@ -70,24 +70,28 @@ public class TrilifeItems {
         .displayName(Text.translatable("itemGroup.trilife.trilife_group")).entries(((displayContext, entries) -> {
             //TODO: review order of items
             entries.add(EMPTY_TOTEM);
+
             entries.add(CHORUS_TOTEM);
-            entries.add(HEART_TOTEM);
             entries.add(SNEAKY_TOTEM);
-            entries.add(HEALTH_TOTEM);
-            entries.add(ARMOUR_TOTEM);
+            entries.add(BACON_TOTEM);
             entries.add(WINDBURST_TOTEM);
             entries.add(LINKABLE_TOTEM);
-            entries.add(BACON_TOTEM);
-            entries.add(LOOT_TOTEM);
-            entries.add(REGEN_TOTEM);
-            entries.add(BACKUP_TOTEM);
             entries.add(IMMORTAL_TOTEM);
+
+            entries.add(REGEN_TOTEM);
+            entries.add(HEALTH_TOTEM);
+            entries.add(HEART_TOTEM);
+            entries.add(ARMOUR_TOTEM);
+            entries.add(BACKUP_TOTEM);
+
             entries.add(VAULT_TOTEM);
+            entries.add(LOOT_TOTEM);
 
             entries.add(HEART_CAKE);
             entries.add(SOUL_HEART);
             entries.add(ENDER_ORB);
             entries.add(DARK_ORB);
+
             entries.add(TOTINIUM_NUGGET);
             entries.add(TOTINIUM_INGOT);
             entries.add(TOTINIUM_BLOCK);

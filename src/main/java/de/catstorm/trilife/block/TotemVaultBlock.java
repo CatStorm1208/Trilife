@@ -54,7 +54,6 @@ public class TotemVaultBlock extends BlockWithEntity {
         }
         if (blockEntity instanceof TotemVaultBlockEntity totemVaultBlockEntity) {
             for (int i = 0; i < 41; i++) {
-                //NOTE: maybe inverse these?
                 var stack = player.getInventory().getStack(i);
                 if (!stack.isEmpty())
                     player.dropItem(stack, true, false);
