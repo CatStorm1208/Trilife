@@ -2,6 +2,7 @@ package de.catstorm.trilife;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import static de.catstorm.trilife.Trilife.*;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
@@ -34,13 +35,9 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
-import static de.catstorm.trilife.Trilife.playerLogoutZombies;
-import static de.catstorm.trilife.Trilife.zombieInventories;
 
 public class TrilifeEvents {
     public static void initEvents() {
@@ -49,7 +46,6 @@ public class TrilifeEvents {
         LootTableEvents.MODIFY.register(TrilifeEvents::handleLootTableModify);
         ServerLivingEntityEvents.AFTER_DEATH.register(TrilifeEvents::handleLivingEntityAfterDeath);
         CommandRegistrationCallback.EVENT.register(TrilifeEvents::handleCommandRegistration);
-
     }
 
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
@@ -86,8 +82,8 @@ public class TrilifeEvents {
             world.spawnEntity(zombie);
         });
 
-
-        playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //NOTE: 3600*20
+        playerLogoutZombies.remove(player.getUuid());
+        playerLogoutZombies.put(player.getUuid(), server.getTicks() + 60*20); //TODO: 3600*20
 
         Set<ItemStack> drops = new HashSet<>();
         drops.addAll(player.getInventory().main);
@@ -153,20 +149,18 @@ public class TrilifeEvents {
                                                   CommandRegistryAccess registryAccess,
                                                   CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("trilife")
+            .requires(source -> source.hasPermissionLevel(2)) //NOTE: maybe 3?
             /*.then(CommandManager.literal("link")
                 .executes(TrilifeCommands::link))*/
             /*.then(CommandManager.literal("revive")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::revive)))*/
             .then(CommandManager.literal("increment")
-                .requires(source -> source.hasPermissionLevel(4))
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::increment)))
             .then(CommandManager.literal("init")
-                .requires(source -> source.hasPermissionLevel(4))
                 .executes(TrilifeCommands::init))
             .then(CommandManager.literal("setLives")
-                .requires(source -> source.hasPermissionLevel(4))
                 .then(CommandManager.argument("players", EntityArgumentType.players())
                     .then(CommandManager.argument("lives", IntegerArgumentType.integer())
                         .executes(TrilifeCommands::setLives)))));

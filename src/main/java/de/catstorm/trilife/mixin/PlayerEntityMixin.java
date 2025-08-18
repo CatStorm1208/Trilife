@@ -13,12 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerEntityMixin {
     @Shadow public abstract Iterable<ItemStack> getHandItems();
 
-    @Inject(method = "dropInventory", at = @At("HEAD"), cancellable = true)
+    //In theory, injecting at HEAD should work, but for some fucked up reason it doesn't
+    @Inject(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;vanishCursedItems()V"), cancellable = true)
     private void dropInventory(CallbackInfo ci) {
         for (var item : getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
             item.decrement(1);
             ci.cancel();
-            break;
+            return;
         }
     }
 }

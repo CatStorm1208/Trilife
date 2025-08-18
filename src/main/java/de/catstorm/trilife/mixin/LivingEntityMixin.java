@@ -44,11 +44,8 @@ import java.util.UUID;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
     @Unique private LivingEntity THIS = (LivingEntity) (Object) this;
-    @SuppressWarnings("unused") @Shadow protected abstract boolean tryUseTotem(DamageSource source);
     @Shadow public abstract Iterable<ItemStack> getHandItems();
     @Shadow public abstract void playSound(@Nullable SoundEvent sound);
-    //@Shadow protected abstract void consumeItem();
-    //@Shadow protected abstract void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition);
 
     @Inject(method = "dropXp", at = @At("HEAD"), cancellable = true)
     private void dropXp(Entity attacker, CallbackInfo ci) {
@@ -127,6 +124,7 @@ public abstract class LivingEntityMixin {
                         THIS.getWorld().sendEntityStatus(THIS, (byte) 35);
                         assert THIS.getServer() != null;
 
+                        //Never-nesters can shut up /j
                         if (PlayerUtility.isPlayerOnline(linkUUID, THIS.getServer())) {
                             ServerPlayerEntity link = THIS.getServer().getPlayerManager().getPlayer(linkUUID);
                             assert link != null;
@@ -140,7 +138,7 @@ public abstract class LivingEntityMixin {
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
-                    item.decrement(1);
+                    totem.onPop(source, THIS);
                     cir.setReturnValue(false);
                 }
                 else {

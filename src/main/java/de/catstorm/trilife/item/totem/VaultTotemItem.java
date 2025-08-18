@@ -6,6 +6,7 @@ import de.catstorm.trilife.block.blockEntity.TotemVaultBlockEntity;
 import de.catstorm.trilife.item.TrilifeItems;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.PlantBlock;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -15,7 +16,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Clearable;
 import net.minecraft.world.World;
-
 import java.util.Objects;
 
 public class VaultTotemItem extends TotemItem {
@@ -31,17 +31,11 @@ public class VaultTotemItem extends TotemItem {
 
         if (world instanceof ServerWorld serverWorld) {
             var pos = owner.getBlockPos();
-            while (true) {
-                var block = world.getBlockState(owner.getBlockPos());
-                if (block.getBlock() instanceof AirBlock) {
-                    break;
-                }
-                else pos = pos.up();
-                if (pos.getY() >= world.getTopY()) {
-                    owner.sendMessage(Text.of("Could not find a safe location for the vault, dropping your items instead."));
-                    ((PlayerEntity) owner).getInventory().dropAll();
-                    break;
-                }
+            var block = world.getBlockState(pos);
+            if (!(block.getBlock() instanceof AirBlock || block.getBlock() instanceof PlantBlock)) {
+                owner.sendMessage(Text.of("Could not find a safe location for the vault, dropping your items instead."));
+                ((PlayerEntity) owner).getInventory().dropAll();
+                return;
             }
 
             Clearable.clear(serverWorld.getBlockEntity(pos));

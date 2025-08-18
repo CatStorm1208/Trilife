@@ -1,7 +1,7 @@
 package de.catstorm.trilife.mixin;
 
 import static de.catstorm.trilife.Trilife.playerLogoutZombies;
-import static de.catstorm.trilife.logic.PlayerUtility.isPlayerOnline;
+import de.catstorm.trilife.logic.PlayerUtility;
 import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,8 @@ public abstract class ZombieEntityMixin {
             UUID uuid = UUID.fromString(tag.split("_")[1]);
             if (!playerLogoutZombies.containsKey(uuid)) THIS.discard();
             else if (playerLogoutZombies.get(uuid) <= Objects.requireNonNull(THIS.getServer()).getTicks()) THIS.discard();
-            else if (isPlayerOnline(uuid, THIS.getServer())) THIS.discard();
+            else if (PlayerUtility.isPlayerOnline(uuid, THIS.getServer()) &&
+                playerLogoutZombies.get(uuid) - THIS.getServer().getTicks() < (60-5)*20) THIS.discard(); //TODO: 3600-5
         }
     }
 }

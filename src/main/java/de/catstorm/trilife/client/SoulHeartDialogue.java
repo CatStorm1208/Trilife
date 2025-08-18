@@ -38,9 +38,9 @@ public class SoulHeartDialogue extends Screen {
         alternatingX.reset();
 
         for (var player : playerList) {
-            if (player.getDisplayName() == null) continue;
+            if (player.getScoreboardTeam() != null) continue;
 
-            String displayName = player.getDisplayName().getString();
+            String displayName = player.getProfile().getName();
             if (displayName == null || buttonsContainPlayerName(displayName)) continue;
 
             ButtonWidget button = ButtonWidget.builder(Text.literal(displayName), this::handleButtonPress)

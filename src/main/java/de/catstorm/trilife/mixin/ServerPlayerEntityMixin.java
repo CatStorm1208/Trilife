@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
-public class ServerPlayerEntityMixin {
+public abstract class ServerPlayerEntityMixin {
     @Unique private ServerPlayerEntity THIS = (ServerPlayerEntity) (Object) this;
     @Shadow @Final public MinecraftServer server;
 
