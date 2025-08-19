@@ -27,9 +27,9 @@ public abstract class ServerPlayerEntityMixin {
     //fucking hell finally
     @Inject(method = "copyFrom", at = @At("HEAD"))
     private void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        THIS.getInventory().clone(oldPlayer.getInventory());
         if (!alive) for (var item : oldPlayer.getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
             item.decrement(1);
-            THIS.getInventory().clone(oldPlayer.getInventory());
             THIS.experienceLevel = oldPlayer.experienceLevel;
             THIS.totalExperience = oldPlayer.totalExperience;
             THIS.experienceProgress = oldPlayer.experienceProgress;
