@@ -44,7 +44,7 @@ public final class PlayerUtility {
 
                     LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(player.getWorld());
                     assert lightning != null;
-                    lightning.updatePosition(player.getX(), player.getY(), player.getZ());
+                    lightning.updatePosition(player.getX(), player.getY() + 1, player.getZ());
                     player.getWorld().spawnEntity(lightning);
                 }
                 case 1 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("reds"));

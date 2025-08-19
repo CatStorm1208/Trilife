@@ -1,5 +1,6 @@
 package de.catstorm.trilife.mixin;
 
+import de.catstorm.trilife.StateSaverAndLoader;
 import de.catstorm.trilife.item.TrilifeItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,13 +21,13 @@ public abstract class PlayerInventoryMixin {
 
     @Inject(method = "dropAll", at = @At("HEAD"), cancellable = true)
     private void dropAll(CallbackInfo ci) {
-        for (var item : player.getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
+        for (var item : player.getHandItems()) if (item.isOf(TrilifeItems.LOOT_TOTEM) || item.isOf(TrilifeItems.VAULT_TOTEM)) {
             ci.cancel();
             return;
         }
         for (var list : combinedInventory) for (int i = 0; i < list.size(); i++) {
             ItemStack itemStack = list.get(i);
-            if (!itemStack.isEmpty() && Math.random() > 0.33) {
+            if (!itemStack.isEmpty() && (Math.random() > 0.33 || StateSaverAndLoader.getPlayerState(player).lives <= 1)) {
                 player.dropItem(itemStack, true, false);
                 list.set(i, ItemStack.EMPTY);
             }

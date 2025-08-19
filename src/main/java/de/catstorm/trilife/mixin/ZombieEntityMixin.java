@@ -23,7 +23,7 @@ public abstract class ZombieEntityMixin {
             if (!playerLogoutZombies.containsKey(uuid)) discardAndRemove(uuid);
             else if (playerLogoutZombies.get(uuid) <= Objects.requireNonNull(THIS.getServer()).getTicks()) discardAndRemove(uuid);
             else if (PlayerUtility.isPlayerOnline(uuid, THIS.getServer()) &&
-                playerLogoutZombies.get(uuid) - THIS.getServer().getTicks() < (3600-5)*20) discardAndRemove(uuid); //TODO: 3600-5
+                playerLogoutZombies.get(uuid) - THIS.getServer().getTicks() < (3600-5)*20) discardAndRemove(uuid);
         }
     }
 

@@ -35,7 +35,6 @@ public class ClientPayloadHandler {
             }
             case 1 -> MinecraftClient.getInstance().gameRenderer.showFloatingItem(new ItemStack(TrilifeItems.GENFROSTED));
             case 2 -> {
-                //NOTE: maybe local is not a smart idea?
                 SoulHeartDialogue dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
                 MinecraftClient.getInstance().setScreen(dialogue);
             }

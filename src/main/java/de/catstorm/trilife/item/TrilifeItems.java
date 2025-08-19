@@ -68,7 +68,6 @@ public class TrilifeItems {
     //Creative mode tab
     public static final ItemGroup TRILIFE_GROUP = FabricItemGroup.builder().icon(() -> new ItemStack(EMPTY_TOTEM))
         .displayName(Text.translatable("itemGroup.trilife.trilife_group")).entries(((displayContext, entries) -> {
-            //TODO: review order of items
             entries.add(EMPTY_TOTEM);
 
             entries.add(CHORUS_TOTEM);

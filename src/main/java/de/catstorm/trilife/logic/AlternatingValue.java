@@ -14,6 +14,10 @@ public class AlternatingValue<Type> {
         return shift? value2 : value1;
     }
 
+    public Type getFirst() {
+        return value1;
+    }
+
     public Type next() {
         skip();
 
