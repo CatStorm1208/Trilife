@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
+    "particle": "trilife:block/totinium_block_eyes",
     "down": "trilife:block/totinium_block_eyes_closed",
     "up": "trilife:block/totinium_block_eyes",
     "north": "trilife:block/totinium_block_eyes_closed",

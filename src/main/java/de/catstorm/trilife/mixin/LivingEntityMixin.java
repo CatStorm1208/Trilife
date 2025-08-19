@@ -132,7 +132,6 @@ public abstract class LivingEntityMixin {
                     }
                 }
                 else if (item.isOf(TrilifeItems.LOOT_TOTEM)) {
-                    totem.onPop(source, THIS);
                     cir.setReturnValue(false);
                 }
                 else {
