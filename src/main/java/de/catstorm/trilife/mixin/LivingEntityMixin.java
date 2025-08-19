@@ -36,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -81,6 +80,8 @@ public abstract class LivingEntityMixin {
             zombieInventories.remove(uuid);
             PlayerUtility.queuePlayerLivesChange(uuid, -1, THIS.getServer());
             playerLogoutZombies.remove(uuid);
+            if (THIS.getServer() != null)
+                StateSaverAndLoader.getServerState(THIS.getServer()).zombieCheckedPlayers.add(uuid);
             break;
         }
     }

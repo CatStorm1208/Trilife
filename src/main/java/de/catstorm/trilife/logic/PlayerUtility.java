@@ -30,22 +30,27 @@ import java.util.EnumSet;
 import java.util.UUID;
 
 public final class PlayerUtility {
-    public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {
-        evalLives(player, lives, server, true);
+    public static void evalLives(LivingEntity player, int lives, MinecraftServer server, boolean strike) {
+        evalLives(player, lives, server, true, strike);
     }
 
-    private static void evalLives(LivingEntity player, int lives, MinecraftServer server, boolean firstRun) {
+    public static void evalLives(LivingEntity player, int lives, MinecraftServer server) {
+        evalLives(player, lives, server, true, true);
+    }
+
+    private static void evalLives(LivingEntity player, int lives, MinecraftServer server, boolean firstRun, boolean strike) {
         try {
             ServerScoreboard scoreboard = server.getScoreboard();
             assert scoreboard != null;
             switch (lives) {
                 case 0 -> {
                     scoreboard.clearTeam(player.getNameForScoreboard());
-
-                    LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(player.getWorld());
-                    assert lightning != null;
-                    lightning.updatePosition(player.getX(), player.getY() + 1, player.getZ());
-                    player.getWorld().spawnEntity(lightning);
+                    if (strike) {
+                        LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(player.getWorld());
+                        assert lightning != null;
+                        lightning.updatePosition(player.getX(), player.getY() + 1, player.getZ());
+                        player.getWorld().spawnEntity(lightning);
+                    }
                 }
                 case 1 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("reds"));
                 case 2 -> scoreboard.addScoreHolderToTeam(player.getNameForScoreboard(), scoreboard.getTeam("yellows"));
@@ -61,7 +66,7 @@ public final class PlayerUtility {
             if (firstRun) {
                 Trilife.LOGGER.warn("Evaluating lives failed, this is normal during first world creation. Running team generation and retrying.");
                 teamGen(server);
-                evalLives(player, lives, server, false);
+                evalLives(player, lives, server, false, true);
             }
             else {
                 Trilife.LOGGER.error("A serious problem occurred whilst evaluating lives.");

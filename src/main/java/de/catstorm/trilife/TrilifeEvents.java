@@ -57,20 +57,22 @@ public class TrilifeEvents {
     private static void handleServerPlayConnectionJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         PlayerData playerState = StateSaverAndLoader.getPlayerState(handler.getPlayer());
         StateSaverAndLoader state = StateSaverAndLoader.getServerState(server);
+        final int livesBefore = playerState.lives;
         if (state.playerLivesQueue.containsKey(handler.getPlayer().getUuid())) {
-            final int livesBefore = playerState.lives;
             playerState.lives += state.playerLivesQueue.get(handler.getPlayer().getUuid());
-            if (livesBefore > playerState.lives) {
+            if (livesBefore > playerState.lives && state.zombieCheckedPlayers.contains(handler.getPlayer().getUuid())) {
                 var pos = handler.getPlayer().getRespawnTarget(false, TeleportTarget.NO_OP).pos();
                 handler.getPlayer().setPos(pos.getX(), pos.getY(), pos.getZ());
                 handler.getPlayer().getInventory().clear();
-                handler.getPlayer().sendMessage(Text.of("You were killed whilst being logged out. A life has been deducted!"));
+                state.zombieCheckedPlayers.remove(handler.getPlayer().getUuid());
             }
+            handler.getPlayer().sendMessage(Text.of("You were killed whilst being logged out. A life has been deducted!"));
             state.playerLivesQueue.remove(handler.getPlayer().getUuid());
         }
 
         server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));
-        PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server);
+        if (livesBefore > playerState.lives) PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server);
+        else PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server, false);
     }
 
     private static void handleServerPlayConnectionDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {

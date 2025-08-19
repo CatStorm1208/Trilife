@@ -7,13 +7,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
-import java.util.HashMap;
-import java.util.UUID;
+
+import java.util.*;
+
 import static de.catstorm.trilife.Trilife.MOD_ID;
 
 public class StateSaverAndLoader extends PersistentState {
     public HashMap<UUID, PlayerData> players = new HashMap<>();
     public HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
+    public ArrayList<UUID> zombieCheckedPlayers = new ArrayList<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
@@ -39,6 +41,12 @@ public class StateSaverAndLoader extends PersistentState {
         });
         nbt.put("player_lives_queue", livesQueueNbt);
 
+        NbtCompound zombieCheckedNbt = new NbtCompound();
+        for (int i = 0; i < zombieCheckedPlayers.size(); i++) {
+            zombieCheckedNbt.putString(String.valueOf(i), zombieCheckedPlayers.get(i).toString());
+        }
+        nbt.put("zombie_checked_players", zombieCheckedNbt);
+
         return nbt;
     }
 
@@ -60,6 +68,10 @@ public class StateSaverAndLoader extends PersistentState {
         livesQueueNbt.getKeys().forEach(key -> state.playerLivesQueue.put(UUID.fromString(key),
             livesQueueNbt.getCompound(key).getInt("change")));
 
+        NbtCompound zombieCheckedNbt = tag.getCompound("zombie_checked_players");
+        zombieCheckedNbt.getKeys().forEach(key ->
+            state.zombieCheckedPlayers.add(UUID.fromString(zombieCheckedNbt.getString(key))));
+
         return state;
     }
 
@@ -67,6 +79,7 @@ public class StateSaverAndLoader extends PersistentState {
         StateSaverAndLoader state = new StateSaverAndLoader();
         state.players = new HashMap<>();
         state.playerLivesQueue = new HashMap<>();
+        state.zombieCheckedPlayers = new ArrayList<>();
         return state;
     }
 
