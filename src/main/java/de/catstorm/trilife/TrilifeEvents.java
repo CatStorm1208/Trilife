@@ -33,7 +33,10 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.PlainTextContent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import java.util.HashSet;
@@ -84,7 +87,9 @@ public class TrilifeEvents {
             zombie.updatePosition(player.getX(), player.getY(), player.getZ());
             zombie.addCommandTag("ghost_" + player.getUuidAsString());
             zombie.setAiDisabled(true);
-            zombie.setCustomName(Text.of(player.getNameForScoreboard()));
+
+            zombie.setCustomName(MutableText.of(PlainTextContent.of(player.getNameForScoreboard()))
+                .formatted(player.getScoreboardTeam() != null? player.getScoreboardTeam().getColor() : Formatting.WHITE));
             zombie.setUuid(UUID.randomUUID());
             world.spawnEntity(zombie);
         });
