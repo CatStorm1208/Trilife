@@ -25,7 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameMode;
-
+import static de.catstorm.trilife.Trilife.LOGGER;
 import java.util.EnumSet;
 import java.util.UUID;
 
@@ -64,13 +64,12 @@ public final class PlayerUtility {
         }
         catch (Exception e) {
             if (firstRun) {
-                Trilife.LOGGER.warn("Evaluating lives failed, this is normal during first world creation. Running team generation and retrying.");
+                LOGGER.warn("Evaluating lives failed, this is normal during first world creation. Running team generation and retrying.");
                 teamGen(server);
                 evalLives(player, lives, server, false, true);
             }
             else {
-                Trilife.LOGGER.error("A serious problem occurred whilst evaluating lives.");
-                e.printStackTrace();
+                LOGGER.error("A serious problem occurred whilst evaluating lives.", e);
             }
         }
     }

@@ -13,6 +13,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashMap;
@@ -31,8 +32,11 @@ public class Trilife implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(TotemFloatPayload.ID, TotemFloatPayload.CODEC);
 
         PayloadTypeRegistry.playC2S().register(RevivePlayerPayload.ID, RevivePlayerPayload.CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(RevivePlayerPayload.ID, (payload, context) -> PlayerUtility
-            .revivePlayer(context.player(), context.server().getPlayerManager().getPlayer(payload.player()), context.server()));
+        ServerPlayNetworking.registerGlobalReceiver(RevivePlayerPayload.ID, (payload, context) -> {
+            try (MinecraftServer server = context.server()) {
+                PlayerUtility.revivePlayer(context.player(), server.getPlayerManager().getPlayer(payload.player()), server);
+            }
+        });
 
         TrilifeEvents.initEvents();
         TrilifeComponents.initComponents();

@@ -16,29 +16,35 @@ import net.minecraft.text.Text;
 public class ClientPayloadHandler {
 
     protected static void handlePlayerLivesPayload(PlayerLivesPayload payload, ClientPlayNetworking.Context context) {
-        ClientPlayerEntity player = context.client().player;
-        assert player != null;
-        TrilifeClient.lives = payload.playerLifeCount();
-        //player.sendMessage(Text.of("Your Life count: " + payload.playerLifeCount()));
+        try (MinecraftClient client = context.client()) {
+            ClientPlayerEntity player = client.player;
+            assert player != null;
+            TrilifeClient.lives = payload.playerLifeCount();
+            //player.sendMessage(Text.of("Your Life count: " + payload.playerLifeCount()));
+        }
     }
 
     protected static void handleTotemFloatPayload(TotemFloatPayload payload, ClientPlayNetworking.Context context) {
-        ClientPlayerEntity player = context.client().player;
-        assert player != null;
-        int useless = payload.useless(); //Pls don't ask why
-        switch (useless) {
-            case 0 -> {
-                for (var item : player.getHandItems()) if (item.getItem() instanceof TotemItem){
-                    MinecraftClient.getInstance().gameRenderer.showFloatingItem(item);
-                    break;
+        try (MinecraftClient client = context.client()) {
+            ClientPlayerEntity player = client.player;
+            assert player != null;
+            int useless = payload.useless(); //Pls don't ask why
+            switch (useless) {
+                case 0 -> {
+                    for (var item : player.getHandItems())
+                        if (item.getItem() instanceof TotemItem) {
+                            MinecraftClient.getInstance().gameRenderer.showFloatingItem(item);
+                            break;
+                        }
                 }
+                case 1 ->
+                    MinecraftClient.getInstance().gameRenderer.showFloatingItem(new ItemStack(TrilifeItems.GENFROSTED));
+                case 2 -> {
+                    SoulHeartDialogue dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
+                    MinecraftClient.getInstance().setScreen(dialogue);
+                }
+                case 3 -> TrilifeClient.animationCanStart = true;
             }
-            case 1 -> MinecraftClient.getInstance().gameRenderer.showFloatingItem(new ItemStack(TrilifeItems.GENFROSTED));
-            case 2 -> {
-                SoulHeartDialogue dialogue = new SoulHeartDialogue(Text.literal("Soul Heart dialogue"));
-                MinecraftClient.getInstance().setScreen(dialogue);
-            }
-            case 3 -> TrilifeClient.animationCanStart = true;
         }
     }
 }
