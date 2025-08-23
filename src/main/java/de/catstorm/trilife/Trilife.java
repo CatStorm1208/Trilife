@@ -33,9 +33,8 @@ public class Trilife implements ModInitializer {
 
         PayloadTypeRegistry.playC2S().register(RevivePlayerPayload.ID, RevivePlayerPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(RevivePlayerPayload.ID, (payload, context) -> {
-            try (MinecraftServer server = context.server()) {
-                PlayerUtility.revivePlayer(context.player(), server.getPlayerManager().getPlayer(payload.player()), server);
-            }
+            MinecraftServer server = context.server();
+            PlayerUtility.revivePlayer(context.player(), server.getPlayerManager().getPlayer(payload.player()), server);
         });
 
         TrilifeEvents.initEvents();
