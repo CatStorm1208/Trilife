@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.*;
 import de.catstorm.trilife.item.TrilifeItems;
+import static de.catstorm.trilife.logic.FuckTheJavaStandardMathLibrary.TimeConstants.t1h;
 import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -80,6 +81,7 @@ public class TrilifeEvents {
 
     private static void handleServerPlayConnectionDisconnect(ServerPlayNetworkHandler handler, MinecraftServer server) {
         ServerPlayerEntity player = handler.player;
+        if (StateSaverAndLoader.getPlayerState(player).lives <= 0) return;
         World world = player.getWorld();
 
         server.execute(() -> {
@@ -95,7 +97,7 @@ public class TrilifeEvents {
         });
 
         playerLogoutZombies.remove(player.getUuid());
-        playerLogoutZombies.put(player.getUuid(), server.getTicks() + 3600*20);
+        playerLogoutZombies.put(player.getUuid(), server.getTicks() + t1h);
 
         Set<ItemStack> drops = new HashSet<>();
         drops.addAll(player.getInventory().main);
@@ -158,7 +160,7 @@ public class TrilifeEvents {
                                                   CommandRegistryAccess registryAccess,
                                                   CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("trilife")
-            .requires(source -> source.hasPermissionLevel(2)) //NOTE: maybe 3?
+            .requires(source -> source.hasPermissionLevel(2))
             .then(CommandManager.literal("increment")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::increment)))

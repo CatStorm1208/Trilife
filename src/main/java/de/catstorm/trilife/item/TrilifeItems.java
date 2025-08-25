@@ -1,6 +1,7 @@
 package de.catstorm.trilife.item;
 
 import static de.catstorm.trilife.Trilife.MOD_ID;
+import static de.catstorm.trilife.logic.FuckTheJavaStandardMathLibrary.TimeConstants.*;
 import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.block.TrilifeBlocks;
 import de.catstorm.trilife.item.totem.*;
@@ -21,31 +22,31 @@ public class TrilifeItems {
     public static final ChorusTotemItem CHORUS_TOTEM = new ChorusTotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final HeartTotemItem HEART_TOTEM = new HeartTotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final TotemItem SNEAKY_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.INVISIBILITY, 10*20, 5, false, false, true),
-        new StatusEffectInstance(StatusEffects.SPEED, 10*20, 2, false, false, true));
+        new StatusEffectInstance(StatusEffects.INVISIBILITY, t10s, 5, false, false, true),
+        new StatusEffectInstance(StatusEffects.SPEED, t10s, 2, false, false, true));
     public static final TotemItem HEALTH_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 20.0f);
     public static final ArmourTotemItem ARMOUR_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
+        new StatusEffectInstance(StatusEffects.REGENERATION, t15s, 1));
     public static final WindburstTotemItem WINDBURST_TOTEM = new WindburstTotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.REGENERATION, 15*20, 1));
+        new StatusEffectInstance(StatusEffects.REGENERATION, t15s, 1));
     public static final LinkableTotemItem LINKABLE_TOTEM = new LinkableTotemItem(new Item.Settings().maxCount(1));
-    public static final LinkedTotemItem LINKED_TOTEM = new LinkedTotemItem(new Item.Settings().maxCount(1)
+    public static final TotemItem LINKED_TOTEM = new TotemItem(new Item.Settings().maxCount(1)
         .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
         .component(TrilifeComponents.LINKED_PLAYER_COMPONENT, ""), 1.0f,
-        new StatusEffectInstance(StatusEffects.ABSORPTION, 300*20, 4),
-        new StatusEffectInstance(StatusEffects.REGENERATION, 30*20, 1));
+        new StatusEffectInstance(StatusEffects.ABSORPTION, t5min, 4),
+        new StatusEffectInstance(StatusEffects.REGENERATION, t30s, 1));
     public static final TotemItem BACON_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.SPEED, 10*20, 1),
-        new StatusEffectInstance(StatusEffects.JUMP_BOOST, 10*20, 1),
-        new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 1),
-        new StatusEffectInstance(StatusEffects.HASTE, 10*20, 1),
-        new StatusEffectInstance(StatusEffects.STRENGTH, 10*20, 1));
+        new StatusEffectInstance(StatusEffects.SPEED, t10s, 1),
+        new StatusEffectInstance(StatusEffects.JUMP_BOOST, t10s, 1),
+        new StatusEffectInstance(StatusEffects.REGENERATION, t10s, 1),
+        new StatusEffectInstance(StatusEffects.HASTE, t10s, 1),
+        new StatusEffectInstance(StatusEffects.STRENGTH, t10s, 1));
     public static final TotemItem LOOT_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f);
     public static final TotemItem REGEN_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.REGENERATION, 10*20, 2));
+        new StatusEffectInstance(StatusEffects.REGENERATION, t10s, 2));
     public static final ArmourTotemItem BACKUP_TOTEM = new ArmourTotemItem(new Item.Settings().maxCount(1), 20.0f);
     public static final TotemItem IMMORTAL_TOTEM = new TotemItem(new Item.Settings().maxCount(1), 1.0f,
-        new StatusEffectInstance(StatusEffects.RESISTANCE, 10*20, 5, false, false, true));
+        new StatusEffectInstance(StatusEffects.RESISTANCE, t10s, 5, false, false, true));
     public static final VaultTotemItem VAULT_TOTEM = new VaultTotemItem(new Item.Settings().maxCount(1), 1.0f);
 
     //Other

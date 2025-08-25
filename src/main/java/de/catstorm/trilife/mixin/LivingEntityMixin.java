@@ -7,7 +7,6 @@ import static de.catstorm.trilife.Trilife.zombieInventories;
 import de.catstorm.trilife.TrilifeComponents;
 import de.catstorm.trilife.item.TrilifeItems;
 import de.catstorm.trilife.item.totem.HeartTotemItem;
-import de.catstorm.trilife.item.totem.LinkedTotemItem;
 import de.catstorm.trilife.item.totem.TotemItem;
 import de.catstorm.trilife.logic.PlayerUtility;
 import de.catstorm.trilife.records.PlayerLivesPayload;
@@ -107,7 +106,7 @@ public abstract class LivingEntityMixin {
                     item.decrement(1);
                     cir.setReturnValue(false);
                 }
-                else if (item.getItem() instanceof LinkedTotemItem) {
+                else if (item.isOf(TrilifeItems.LINKED_TOTEM)) {
                     @SuppressWarnings("DataFlowIssue") //lololololololol
                     UUID linkUUID = UUID.fromString(item.get(TrilifeComponents.LINKED_PLAYER_COMPONENT));
                     if (THIS.getUuidAsString().equals(linkUUID.toString())) {

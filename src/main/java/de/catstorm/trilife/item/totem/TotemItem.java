@@ -1,5 +1,6 @@
 package de.catstorm.trilife.item.totem;
 
+import static de.catstorm.trilife.logic.FuckTheJavaStandardMathLibrary.TimeConstants.t5s;
 import de.catstorm.trilife.logic.PlayerUtility;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -28,7 +29,7 @@ public class TotemItem extends Item {
             if (effect.getEffectType().equals(StatusEffects.RESISTANCE)) shouldApplyResistance = false;
         }
         if (shouldApplyResistance) owner.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE,
-            5*20, 5, false, false, true));
+            t5s, 5, false, false, true));
         PlayerUtility.grantAdvancement(owner, "ono");
     }
 }
