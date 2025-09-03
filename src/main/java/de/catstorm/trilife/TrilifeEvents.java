@@ -1,6 +1,7 @@
 package de.catstorm.trilife;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static de.catstorm.trilife.Trilife.*;
 import de.catstorm.trilife.item.TrilifeItems;
@@ -74,8 +75,14 @@ public class TrilifeEvents {
             state.playerLivesQueue.remove(handler.getPlayer().getUuid());
         }
 
-        server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(), new PlayerLivesPayload(playerState.lives)));
-        if (livesBefore > playerState.lives) PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server);
+        server.execute(() -> ServerPlayNetworking.send(handler.getPlayer(),
+            new PlayerLivesPayload(state.enabled? playerState.lives : 4)));
+
+        if (livesBefore > playerState.lives) {
+            PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server);
+            LOGGER.info("The lives of " + handler.getPlayer().getNameForScoreboard() +
+                " have changed whilst logged out. Current life count: " + playerState.lives);
+        }
         else PlayerUtility.evalLives(handler.getPlayer(), playerState.lives, server, false);
     }
 
@@ -108,7 +115,8 @@ public class TrilifeEvents {
 
     private static void handleLootTableModify(RegistryKey<LootTable> key, LootTable.Builder tableBuilder,
                                               LootTableSource source, RegistryWrapper.WrapperLookup registries) {
-        if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) { //I really hope no one will question me
+        //I really hope no one will question me
+        if (key.toString().equals("ResourceKey[minecraft:loot_table / minecraft:entities/evoker]")) {
             LootPool.Builder poolBuilder = LootPool.builder().with(ItemEntry.builder(TrilifeItems.EMPTY_TOTEM));
             tableBuilder.pool(poolBuilder);
         }
@@ -133,6 +141,8 @@ public class TrilifeEvents {
             MinecraftServer server = entity.getServer();
             assert server != null;
 
+            if (!StateSaverAndLoader.getServerState(server).enabled) return;
+
             PlayerData playerState = StateSaverAndLoader.getPlayerState(entity);
             playerState.lives -= 1;
 
@@ -153,6 +163,7 @@ public class TrilifeEvents {
                     PlayerUtility.grantAdvancement(killer, "the_end_is_never_the_end");
                 }
             }
+            LOGGER.info("Life-count of " + entity.getNameForScoreboard() + " is now: " + playerState.lives);
         }
     }
 
@@ -161,6 +172,9 @@ public class TrilifeEvents {
                                                   CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("trilife")
             .requires(source -> source.hasPermissionLevel(2))
+            .then(CommandManager.literal("setEnabled")
+                .then(CommandManager.argument("enabled", BoolArgumentType.bool())
+                    .executes(TrilifeCommands::setEnabled)))
             .then(CommandManager.literal("increment")
                 .then(CommandManager.argument("player", EntityArgumentType.player())
                     .executes(TrilifeCommands::increment)))
@@ -170,6 +184,7 @@ public class TrilifeEvents {
                 .then(CommandManager.argument("players", EntityArgumentType.players())
                     .then(CommandManager.argument("lives", IntegerArgumentType.integer())
                         .executes(TrilifeCommands::setLives)))));
+
         dispatcher.register(CommandManager.literal("genfrosted")
             .executes(TrilifeCommands::genfrosted));
     }

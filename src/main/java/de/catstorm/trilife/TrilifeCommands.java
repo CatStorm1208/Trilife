@@ -1,5 +1,6 @@
 package de.catstorm.trilife;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -11,9 +12,31 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+import static de.catstorm.trilife.Trilife.LOGGER;
 
 public class TrilifeCommands {
+    protected static int setEnabled(CommandContext<ServerCommandSource> context) {
+        boolean enabled = BoolArgumentType.getBool(context, "enabled");
+        ServerCommandSource source = context.getSource();
+        MinecraftServer server = source.getServer();
+
+        StateSaverAndLoader state = StateSaverAndLoader.getServerState(server);
+
+        if (enabled == state.enabled) {
+            source.sendError(Text.of("Trilife is already " + (enabled? "enabled" : "disabled")));
+            return -1;
+        }
+        state.enabled = enabled;
+
+        for (var player : server.getPlayerManager().getPlayerList()) {
+            server.execute(() -> ServerPlayNetworking.send(player,
+                new PlayerLivesPayload(state.enabled? StateSaverAndLoader.getPlayerState(player).lives : 4)));
+        }
+        return 0;
+    }
+
     protected static int increment(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         var player = EntityArgumentType.getPlayer(context, "player");
 
@@ -35,6 +58,7 @@ public class TrilifeCommands {
 
     protected static int init(CommandContext<ServerCommandSource> context) {
         MinecraftServer server = context.getSource().getServer();
+        LOGGER.info("There might be four warnings below, these can be ignored!");
         PlayerUtility.teamGen(server);
 
         server.setDefaultGameMode(GameMode.SURVIVAL);
@@ -50,6 +74,7 @@ public class TrilifeCommands {
             PlayerUtility.grantAdvancement(player, "root");
         }
 
+        StateSaverAndLoader.getServerState(server).enabled = true;
         return 0;
     }
 

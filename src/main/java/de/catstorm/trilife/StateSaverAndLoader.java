@@ -16,6 +16,7 @@ public class StateSaverAndLoader extends PersistentState {
     public HashMap<UUID, PlayerData> players = new HashMap<>();
     public HashMap<UUID, Integer> playerLivesQueue = new HashMap<>();
     public ArrayList<UUID> zombieCheckedPlayers = new ArrayList<>();
+    public boolean enabled = false;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
@@ -46,6 +47,7 @@ public class StateSaverAndLoader extends PersistentState {
             zombieCheckedNbt.putString(String.valueOf(i), zombieCheckedPlayers.get(i).toString());
         }
         nbt.put("zombie_checked_players", zombieCheckedNbt);
+        nbt.putBoolean("trilife_enabled", enabled);
 
         return nbt;
     }
@@ -71,6 +73,7 @@ public class StateSaverAndLoader extends PersistentState {
         NbtCompound zombieCheckedNbt = tag.getCompound("zombie_checked_players");
         zombieCheckedNbt.getKeys().forEach(key ->
             state.zombieCheckedPlayers.add(UUID.fromString(zombieCheckedNbt.getString(key))));
+        state.enabled = tag.getBoolean("trilife_enabled");
 
         return state;
     }
@@ -80,6 +83,7 @@ public class StateSaverAndLoader extends PersistentState {
         state.players = new HashMap<>();
         state.playerLivesQueue = new HashMap<>();
         state.zombieCheckedPlayers = new ArrayList<>();
+        state.enabled = false;
         return state;
     }
 
